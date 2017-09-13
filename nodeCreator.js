@@ -1,3 +1,5 @@
+console.log('Starting nodeCreator.js');
+
 const newID = require('./idGenerator');
 
 var newNode = function Node(port){
