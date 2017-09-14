@@ -4,3 +4,5 @@ function xorID(thisNode, neighborNode){
 	var result = bigInt(thisNode).xor(neighborNode);
 	return result;
 }
+
+module.exports = xorID;
