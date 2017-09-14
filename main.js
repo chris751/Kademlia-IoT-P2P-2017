@@ -9,7 +9,7 @@ var ID = 'ID:' + newNode.ID;
 var port = '\nport:' + newNode.port;
 
 http.createServer(function(req,res){
-	res.writeHeader(200,{'Content-Type': 'application/json'});
+	res.writeHeader(200,{'Content-Type': 'text/html'});
 	res.write(ID);
 	res.write(port);
 	res.end();
