@@ -1,8 +1,10 @@
-var http = require("http");
-var createNode = require('./nodeCreator');
-
-var newNode = new createNode(8080);
-
+console.log('Starting main.js');
+// modules
+const http = require("http");
+// js files
+const nodeCreator = require('./nodeCreator');
+// variables
+var newNode = new nodeCreator(8080);
 var ID = 'ID:' + newNode.ID;
 var port = '\nport:' + newNode.port;
 
@@ -12,4 +14,3 @@ http.createServer(function(req,res){
 	res.write(port);
 	res.end();
 }).listen(newNode.port);
-console.log('Server started!');

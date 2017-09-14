@@ -1,0 +1,29 @@
+{
+  "name": "p2pstuff",
+  "version": "1.0.0",
+  "description": "Kademlia P2P network",
+  "main": "main.js",
+  "dependencies": {
+    "express": "^4.15.4",
+    "sha1": "^1.1.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chris751/P2Pstuff.git"
+  },
+  "keywords": [
+    "Kademlia",
+    "P2P",
+    "IOT"
+  ],
+  "author": "Christian Maigaard Christensen, Nicolai Le, Niklas Sørensen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chris751/P2Pstuff/issues"
+  },
+  "homepage": "https://github.com/chris751/P2Pstuff#readme"
+}
