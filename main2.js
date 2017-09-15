@@ -1,3 +1,7 @@
+var express = require('express');
+var app = express();
+var request = require('request');
+
 
 console.log('Starting main2.js');
 // modules
@@ -9,9 +13,18 @@ var newNode = new nodeCreator(8081);
 var ID = 'ID:' + newNode.ID;
 var port = '\nport:' + newNode.port;
 
-http.createServer(function(req,res){
-	res.writeHeader(200,{'Content-Type': 'text/plain'});
-	res.write(ID);
-	res.write(port);
-	res.end();
-}).listen(newNode.port);
+
+
+
+
+
+
+app.get('/',function(req,res){
+	//res.send(ID+'    '+port);
+	res.sendFile(__dirname+"/"+"index.html");
+})
+app.listen(8081);
+
+app.get('/api', function(req,res){
+	res.send('hello world');
+})
