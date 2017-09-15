@@ -17,7 +17,6 @@ var port = newNode.port;
 
 var bucket = newNode.bucket;
 
-
 app.get('/',function(req,res){
 	//res.send(ID+'    '+port);
 	res.sendFile(__dirname+"/"+"index.html");
