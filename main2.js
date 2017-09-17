@@ -27,15 +27,15 @@ app.get('/api', function(req,res){
 	res.send('hello world');
 })
 
-var pingPong = function ping () {
-	  request('http://localhost:8080/api/node/PING', function (error, response, body){
-		console.log('error: ', error);
-		console.log('response: ', response && response.statusCode);
-		console.log('body: ', body);
-		}
-	)
-};
-pingPong();
+hbs.registerHelper('ping', function(){
+	request('http://localhost:8080/api/node/PING', function (error, response, body){
+	console.log('error: ', error);
+	console.log('response: ', response && response.statusCode);
+	console.log('body: ', body);
+	}
+)
+});
+
 
 app.listen(8081, function(){
 	console.log('Server is up on port 8081')
