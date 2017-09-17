@@ -6,6 +6,7 @@ console.log('Starting main.js');
 const http = require("http");
 // js files
 const nodeCreator = require('./nodeCreator');
+
 //find node
 // variables
 var newNode = new nodeCreator(8080);

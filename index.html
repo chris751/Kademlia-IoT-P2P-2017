@@ -5,18 +5,10 @@
 </head>
 <body>
 <p>hello</p>
-<input id="pongping" type="submit" value="PING" onclick="pingPong();" />
-<script type="text/javascript">
-var request = require('request');
+<input id="pongping" type="submit" value="PING"/>
+<script>
 
-document.getElementById("pongping").onclick = function pingPong() {
-	request('http://localhost:8080/api/node/PING', function (error, response, body){
-		console.log('error', error);
-		console.log('200 nice', response && response.statusCode);
-		console.log('body:', body);
-		}
-	)
-};
 </script>
+
 </body>
 </html>

@@ -13,18 +13,28 @@ var newNode = new nodeCreator(8081);
 var ID = 'ID:' + newNode.ID;
 var port = '\nport:' + newNode.port;
 
-
-
-
-
-
-
 app.get('/',function(req,res){
 	//res.send(ID+'    '+port);
 	res.sendFile(__dirname+"/"+"index.html");
 })
-app.listen(8081);
+
 
 app.get('/api', function(req,res){
 	res.send('hello world');
 })
+
+var pingPong = function ping () {
+	  request('http://localhost:8080/api/node/PING', function (error, response, body){
+		console.log('error: ', error);
+		console.log('response: ', response && response.statusCode);
+		console.log('body: ', body);
+		}
+	)
+};
+pingPong();
+
+module.exports = pingPong;
+
+app.listen(8081, function(){
+	console.log('Server is up on port 8081')
+});
