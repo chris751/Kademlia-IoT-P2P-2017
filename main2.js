@@ -1,9 +1,11 @@
 // Npm Modules
 const express = require('express');
-const request = require('request');
+const request = require('request-promise')
 const hbs = require('hbs');
 const yargs = require('yargs');
 const http = require("http");
+const bodyParser = require('body-parser');
+const _ = require('lodash');
 // js files
 const nodeCreator = require('./nodeCreator');
 // variables
@@ -19,37 +21,80 @@ var newNode = new nodeCreator(portArgument);
 var ID = newNode.ID;
 var port = newNode.port;
 var app = express();
-app.set('view engine', 'hbs');
+var kbucket = [];
 
-app.get('/', function(req, res) {
+app.set('view engine', 'hbs');
+app.use(bodyParser.urlencoded({
+  extended: false
+}))
+app.use(bodyParser.json());
+
+// request
+const get3501 = {
+  method: 'GET',
+  uri: 'http://localhost:3501/api/node/ping', // always ping port 3501
+  json: true
+}
+
+hbs.registerHelper('ping', function ping() {
+  request(get3501)
+    .then(function(response) {
+      //console.log(response);
+      handleResponse(response);
+    })
+    .catch(function(err) {
+      console.log('error when sending ping(node is already in bucket)');
+    })
+});
+
+function handleResponse(response) {
+  var duplicateId = kbucket.filter((response) => response.id === id); // put id in variable if it already exsists
+  if (duplicateId.length === 0) {
+    kbucket.push(response); //put object in our bucket
+    console.log('something new in the bucket');
+    console.log(kbucket);
+  }
+};
+
+// setup homepage
+app.get('/', function update(req, res) {
   res.render('home.hbs', {
     node_id: ID,
-    port_number: port
+    node_port_number: port,
+    //k_bucket_id: kbucket[0].id, // fix errors to remove
+    //k_bucket_port: kbucket[0].port // fix erros to remove
   });
 })
 
+//setup routes
 app.get('/api', function(req, res) {
   res.send('api');
 })
+
 app.get('/api/node', function(req, res) {
   res.send('node')
 })
 
 app.get('/api/node/ping', function(req, res) {
   res.send({
-    hello: 'this should be JSON'
-  }); //send pong
+    id: ID,
+    port: port
+  });
 })
 
-hbs.registerHelper('ping', function() {
-	var port = 3501;
-  request(`http://localhost:${port}/api/node/PING`, function(error, response, body) {
-    console.log('response: ', response && response.statusCode);
-    console.log('body: ', body);
-  })
-});
+app.get('/api/node/bucket', function(req, res) {
+  res.send({
+    node: kbucket
+  });
+})
 
+app.get('/api/node/:id', function(req, res) {
+  res.send({
+    id: ID
+  });
+})
 
+// start sever
 app.listen(port, function() {
   console.log(`Server is up on port ${port}`)
 });
