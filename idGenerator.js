@@ -1,4 +1,4 @@
-console.log('Starting idGenerator.js');
+
 
 const sha1 = require('sha1');
 

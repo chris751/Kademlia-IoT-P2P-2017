@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Homepage</title>
+  <title>Home</title>
 </head>
 
 <body>
@@ -12,10 +12,101 @@
   <p>{{node_id}}</p>
   <h3>Port Number</h3>
   <p>{{port_number}}</p>
-
-  <form action="{{ping}}">
+  <form name="portForm" action="{{ping}}">
     <input type="submit" value="PING" />
   </form>
+  <br>
+  <form name="portForm" action="{{ping}}">
+    <input type="submit" value="DISCOVER" />
+  </form>
+
+  <!-- start of table -->
+
+
+  <style>
+    body {
+    margin-left: 3%;
+    margin-right: 3%;
+    }
+    table {
+      margin-top: 2%;
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 8px;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2
+    }
+
+    th {
+      background-color: #2196F3;
+      color: white;
+    }
+  </style>
+
+<h1>Network</h1>
+  <table>
+    <tr>
+      <th>Node ID</th>
+      <th>Port</th>
+      <th>Bucket</th>
+    </tr>
+
+    <tr>
+      <td>{{node_id}}</td>
+      <td>{{port_number}}</td>
+      <td>?</td>
+    </tr>
+    <tr>
+      <td>?</td>
+      <td>?</td>
+      <td>?</td>
+    </tr>
+    <tr>
+      <td>?</td>
+      <td>?</td>
+      <td>?</td>
+    </tr>
+    <tr>
+      <td>?</td>
+      <td>?</td>
+      <td>?</td>
+    </tr>
+    <tr>
+      <td>?</td>
+      <td>?</td>
+      <td>?</td>
+    </tr>
+    <tr>
+      <td>?</td>
+      <td>?</td>
+      <td>?</td>
+    </tr>
+    <tr>
+      <td>?</td>
+      <td>?</td>
+      <td>?</td>
+    </tr>
+    <tr>
+      <td>?</td>
+      <td>?</td>
+      <td>?</td>
+    </tr>
+  </table>
+
+  <!--end of table -->
+
+  <script type="text/javascript">
+    console.log('hello');
+  </script>
+
+
 
 </body>
 
