@@ -1,21 +1,25 @@
 var express = require('express');
 var app = express();
-var request = require('request');
+const request = require('request');
+const hbs = require('hbs');
 
-
-console.log('Starting main2.js');
 // modules
 const http = require("http");
 // js files
 const nodeCreator = require('./nodeCreator');
 // variables
 var newNode = new nodeCreator(8081);
-var ID = 'ID:' + newNode.ID;
-var port = '\nport:' + newNode.port;
+var ID = newNode.ID;
+var port = newNode.port;
+
+app.set('view engine', 'hbs');
 
 app.get('/',function(req,res){
 	//res.send(ID+'    '+port);
-	res.sendFile(__dirname+"/"+"index.html");
+	res.render('home.hbs', {
+		node_id: ID,
+		port_number: port
+	});
 })
 
 
@@ -32,8 +36,6 @@ var pingPong = function ping () {
 	)
 };
 pingPong();
-
-module.exports = pingPong;
 
 app.listen(8081, function(){
 	console.log('Server is up on port 8081')
