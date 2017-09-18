@@ -95,6 +95,7 @@ app.get('/api/node/:id', function(req, res) {
 })
 
 // start sever
+// to 'sudo killall node'
 app.listen(port, function() {
   console.log(`Server is up on port ${port}`)
 });
