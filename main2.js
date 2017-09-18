@@ -22,6 +22,7 @@ var ID = newNode.ID;
 var port = newNode.port;
 var app = express();
 var kbucket = [];
+var node_ip_address = `http://localhost:${port}`;
 
 app.set('view engine', 'hbs');
 app.use(bodyParser.urlencoded({
@@ -67,6 +68,7 @@ app.get('/', function update(req, res) {
   res.render('home.hbs', {
     node_id: ID,
     node_port_number: port,
+		node_ip_address: node_ip_address
     //k_bucket_id: kbucket[0].id, // fix errors to remove
     //k_bucket_port: kbucket[0].port // fix erros to remove
   });
@@ -91,7 +93,8 @@ app.get('/api/node/ping', function(req, res) {
 app.get('/api/node/info', function(req,res){
 	res.send({
 		id: ID,
-		port: port
+		port: port,
+		ip_address: node_ip_address
 	})
 })
 
@@ -107,7 +110,6 @@ app.get('/api/node/:id', function(req, res) {
     id: ID
   });
 })
-
 // start sever
 // to 'sudo killall node'
 app.listen(port, function() {
