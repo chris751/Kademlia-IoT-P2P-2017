@@ -22,9 +22,11 @@ var ID = newNode.ID;
 var port = newNode.port;
 var app = express();
 var kbucket = [];
-var node_ip_address = `http://localhost:${port}`;
-var kbucket_id = 0;
-var kbucket_port = 0;
+var my_ip_address = `http://localhost:${port}`;
+var kbucket_id;
+var kbucket_port;
+var kbucket_ip_address;
+
 
 app.set('view engine', 'hbs');
 app.use(bodyParser.urlencoded({
@@ -54,13 +56,10 @@ function handleResponse(response) {
 		var s = new Set();
 		s.add(response);
 		kbucket = Array.from(s);
-		console.log(kbucket);
-
-		console.log(kbucket[0].id);
-		console.log(kbucket[0].port);
-
+		//update kbucket
 		kbucket_id = kbucket[0].id;
 		kbucket_port = kbucket[0].port;
+		kbucket_ip_address = `http://localhost:${kbucket_port}`;
 };
 
 // bucket
@@ -73,9 +72,10 @@ app.get('/', function update(req, res) {
   res.render('home.hbs', {
     node_id: ID,
     node_port_number: port,
-    node_ip_address: node_ip_address,
-    k_bucket_id: kbucket_id, // fix errors to remove
-    k_bucket_port: kbucket_port // fix erros to remove
+		my_ip_address: my_ip_address,
+    kbucket_ip_address: kbucket_ip_address,
+    k_bucket_id: kbucket_id,
+    k_bucket_port: kbucket_port
   });
 })
 
