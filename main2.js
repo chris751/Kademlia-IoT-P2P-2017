@@ -56,6 +56,12 @@ function handleResponse(response) {
   }
 };
 
+
+// bucket
+// ID - på dem man kender
+// IP - 127......
+// port - Port på dem man kender
+
 // setup homepage
 app.get('/', function update(req, res) {
   res.render('home.hbs', {
@@ -81,6 +87,14 @@ app.get('/api/node/ping', function(req, res) {
     port: port
   });
 })
+
+app.get('/api/node/info', function(req,res){
+	res.send({
+		id: ID,
+		port: port
+	})
+})
+
 
 app.get('/api/node/bucket', function(req, res) {
   res.send({
