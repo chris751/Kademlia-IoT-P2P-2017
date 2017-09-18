@@ -44,3 +44,11 @@ app.get('/api/node/info', function(req,res){
 		bucket
 	})
 })
+
+app.get('/api/node/findNode', function(req,res){
+	var result = bucket[3]
+	res.send({
+		result
+	})
+})
+

@@ -8,3 +8,5 @@ var newID = function createID(){
 	return ID;
 }
 module.exports = newID;
+
+//Ændre til at lave et binært ID, med otte bit, randomiseret.
