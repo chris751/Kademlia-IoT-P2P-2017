@@ -1,7 +1,4 @@
-
-
-
-const sha1 = require('sha1');
+//const sha1 = require('sha1');
 
 var newID = function createID(){
 	//var rN = Math.random();
