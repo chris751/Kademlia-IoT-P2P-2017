@@ -23,6 +23,8 @@ var port = newNode.port;
 var app = express();
 var kbucket = [];
 var node_ip_address = `http://localhost:${port}`;
+var kbucket_id = 0;
+var kbucket_port = 0;
 
 app.set('view engine', 'hbs');
 app.use(bodyParser.urlencoded({
@@ -44,19 +46,22 @@ hbs.registerHelper('ping', function ping() {
       handleResponse(response);
     })
     .catch(function(err) {
-      console.log('error when sending ping(node is already in bucket)');
+      console.log(err);
     })
 });
 
 function handleResponse(response) {
-  var duplicateId = kbucket.filter((response) => response.id === id); // put id in variable if it already exsists
-  if (duplicateId.length === 0) {
-    kbucket.push(response); //put object in our bucket
-    console.log('something new in the bucket');
-    console.log(kbucket);
-  }
-};
+		var s = new Set();
+		s.add(response);
+		kbucket = Array.from(s);
+		console.log(kbucket);
 
+		console.log(kbucket[0].id);
+		console.log(kbucket[0].port);
+
+		kbucket_id = kbucket[0].id;
+		kbucket_port = kbucket[0].port;
+};
 
 // bucket
 // ID - på dem man kender
@@ -68,9 +73,9 @@ app.get('/', function update(req, res) {
   res.render('home.hbs', {
     node_id: ID,
     node_port_number: port,
-		node_ip_address: node_ip_address
-    //k_bucket_id: kbucket[0].id, // fix errors to remove
-    //k_bucket_port: kbucket[0].port // fix erros to remove
+    node_ip_address: node_ip_address,
+    k_bucket_id: kbucket_id, // fix errors to remove
+    k_bucket_port: kbucket_port // fix erros to remove
   });
 })
 
@@ -90,14 +95,13 @@ app.get('/api/node/ping', function(req, res) {
   });
 })
 
-app.get('/api/node/info', function(req,res){
-	res.send({
-		id: ID,
-		port: port,
-		ip_address: node_ip_address
-	})
+app.get('/api/node/info', function(req, res) {
+  res.send({
+    id: ID,
+    port: port,
+    ip_address: node_ip_address
+  })
 })
-
 
 app.get('/api/node/bucket', function(req, res) {
   res.send({
