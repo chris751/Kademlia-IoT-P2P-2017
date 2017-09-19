@@ -1,4 +1,4 @@
-var XOR = require("./XOR");
+var xorID = require("./XOR");
 
 
 
@@ -9,8 +9,7 @@ var kBucketManager = function kBucketManager(managerId,sortedId){
 	this.sortedId = sortedId; // her skal anvendes det ID'et for den node som skal sorteres.
 	this.managerId = managerId; //her skal anvendes det ID'et fra den node som bruger metoden
 
-	var xorResult = XOR(managerId,sortedId);
-	
+	var xorResult = xorID.xorID(managerId,sortedId);
 
 	//I dette tilfælde burde 8 være K, hvor K er i forbindelse med K bucket
 	for(i=0;i<8;i++){
