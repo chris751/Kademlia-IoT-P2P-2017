@@ -8,6 +8,7 @@ const bodyParser = require('body-parser');
 const _ = require('lodash');
 // js files
 const nodeCreator = require('./nodeCreator');
+const kBucketManager = require('./kBucketManager');
 // variables
 const portArgument = process.argv.slice(2)[0]
 
@@ -60,7 +61,13 @@ function handleResponse(response) {
 		kbucket_id = kbucket[0].id;
 		kbucket_port = kbucket[0].port;
 		kbucket_ip_address = `http://localhost:${kbucket_port}`;
+
+		//attempt to put in correct bucket
+		var bucketNr=kBucketManager.kBucketManager(ID, kbucket_id);
+		console.log('bucket nr: ' + bucketNr);
 };
+
+
 
 // bucket
 // ID - på dem man kender

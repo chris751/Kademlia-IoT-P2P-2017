@@ -4,6 +4,7 @@
   "description": "Kademlia P2P network",
   "main": "main.js",
   "dependencies": {
+    "big-integer": "^1.6.25",
     "body-parser": "^1.18.1",
     "express": "^4.15.4",
     "hbs": "^4.0.1",
