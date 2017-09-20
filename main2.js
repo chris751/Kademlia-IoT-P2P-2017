@@ -12,12 +12,6 @@ const kBucketManager = require('./kBucketManager');
 // variables
 const portArgument = process.argv.slice(2)[0]
 
-// precondition - program will terminate here if no argument is entered
-if (portArgument === undefined) {
-  console.log('Enter port number as argument');
-  return;
-}
-
 var newNode = new nodeCreator(portArgument);
 var ID = newNode.ID;
 var port = newNode.port;
@@ -28,12 +22,17 @@ var kbucket_id;
 var kbucket_port;
 var kbucket_ip_address;
 
-
 app.set('view engine', 'hbs');
 app.use(bodyParser.urlencoded({
   extended: false
 }))
 app.use(bodyParser.json());
+
+// precondition - program will terminate here if no argument is entered
+if (portArgument === undefined) {
+  console.log('Enter port number as argument');
+  return;
+}
 
 // request
 const get3501 = {
@@ -63,7 +62,7 @@ function handleResponse(response) {
 		kbucket_ip_address = `http://localhost:${kbucket_port}`;
 
 		//attempt to put in correct bucket
-		var bucketNr=kBucketManager.kBucketManager(ID, kbucket_id);
+		var bucketNr = kBucketManager.kBucketManager(ID, kbucket_id);
 		console.log('bucket nr: ' + bucketNr);
 };
 
