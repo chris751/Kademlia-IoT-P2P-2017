@@ -8,26 +8,31 @@ const bodyParser = require('body-parser');
 const _ = require('lodash');
 // js files
 const nodeCreator = require('./nodeCreator');
+const kBucketManager = require('./kBucketManager');
 // variables
 const portArgument = process.argv.slice(2)[0]
-
-// precondition - program will terminate here if no argument is entered
-if (portArgument === undefined) {
-  console.log('Enter port number as argument');
-  return;
-}
 
 var newNode = new nodeCreator(portArgument);
 var ID = newNode.ID;
 var port = newNode.port;
 var app = express();
 var kbucket = [];
+var my_ip_address = `http://localhost:${port}`;
+var kbucket_id;
+var kbucket_port;
+var kbucket_ip_address;
 
 app.set('view engine', 'hbs');
 app.use(bodyParser.urlencoded({
   extended: false
 }))
 app.use(bodyParser.json());
+
+// precondition - program will terminate here if no argument is entered
+if (portArgument === undefined) {
+  console.log('Enter port number as argument');
+  return;
+}
 
 // request
 const get3501 = {
@@ -43,18 +48,24 @@ hbs.registerHelper('ping', function ping() {
       handleResponse(response);
     })
     .catch(function(err) {
-      console.log('error when sending ping(node is already in bucket)');
+      console.log(err);
     })
 });
 
 function handleResponse(response) {
-  var duplicateId = kbucket.filter((response) => response.id === id); // put id in variable if it already exsists
-  if (duplicateId.length === 0) {
-    kbucket.push(response); //put object in our bucket
-    console.log('something new in the bucket');
-    console.log(kbucket);
-  }
+		var s = new Set();
+		s.add(response);
+		kbucket = Array.from(s);
+		//update kbucket
+		kbucket_id = kbucket[0].id;
+		kbucket_port = kbucket[0].port;
+		kbucket_ip_address = `http://localhost:${kbucket_port}`;
+
+		//attempt to put in correct bucket
+		var bucketNr = kBucketManager.kBucketManager(ID, kbucket_id);
+		console.log('bucket nr: ' + bucketNr);
 };
+
 
 
 // bucket
@@ -67,8 +78,10 @@ app.get('/', function update(req, res) {
   res.render('home.hbs', {
     node_id: ID,
     node_port_number: port,
-    //k_bucket_id: kbucket[0].id, // fix errors to remove
-    //k_bucket_port: kbucket[0].port // fix erros to remove
+		my_ip_address: my_ip_address,
+    kbucket_ip_address: kbucket_ip_address,
+    k_bucket_id: kbucket_id,
+    k_bucket_port: kbucket_port
   });
 })
 
@@ -88,13 +101,13 @@ app.get('/api/node/ping', function(req, res) {
   });
 })
 
-app.get('/api/node/info', function(req,res){
-	res.send({
-		id: ID,
-		port: port
-	})
+app.get('/api/node/info', function(req, res) {
+  res.send({
+    id: ID,
+    port: port,
+    ip_address: node_ip_address
+  })
 })
-
 
 app.get('/api/node/bucket', function(req, res) {
   res.send({
@@ -107,7 +120,6 @@ app.get('/api/node/:id', function(req, res) {
     id: ID
   });
 })
-
 // start sever
 // to 'sudo killall node'
 app.listen(port, function() {

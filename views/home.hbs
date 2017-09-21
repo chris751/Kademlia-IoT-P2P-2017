@@ -12,6 +12,8 @@
   <p>{{node_id}}</p>
   <h3>Port Number</h3>
   <p>{{node_port_number}}</p>
+  <h3>Node URI</h3>
+  <p>{{my_ip_address}}</p>
   <form name="portForm" action="{{ping}}">
     <input type="submit" value="PING" />
   </form>
@@ -22,12 +24,20 @@
 
   <!-- start of table -->
 
-
   <style>
     body {
-    margin-left: 3%;
-    margin-right: 3%;
+      margin-left: 3%;
+      margin-right: 3%;
+      font-family: Arial, Helvetica, sans-serif;
     }
+
+    table,
+    td,
+    th {
+      border: 1px solid #9E9E9E;
+      text-align: left;
+    }
+
     table {
       margin-top: 2%;
       border-collapse: collapse;
@@ -37,77 +47,166 @@
     th,
     td {
       text-align: left;
-      padding: 8px;
-    }
-
-    tr:nth-child(even) {
-      background-color: #f2f2f2
+      padding: 7px;
     }
 
     th {
       background-color: #2196F3;
       color: white;
     }
+
+    .floating-box {
+      float: left;
+      width: 31%;
+      height: 110px;
+      margin: 10px;
+    }
   </style>
 
-<h1>Network</h1>
-  <table>
-    <tr>
-      <th>Node ID</th>
-      <th>Port</th>
-      <th>Bucket</th>
-    </tr>
+    <div class="floating-box">
+      <h2>Bucket 1</h2>
+      <table id="table1">
+        <tr>
+          <th>Node ID</th>
+          <th>Port</th>
+          <th>IP_address</th>
+        </tr>
 
-    <tr>
-      <td>{{node_id}}</td>
-      <td>{{node_port_number}}</td>
-      <td>{{k_bucket_port}}, {{k_bucket_id}}</td>
-    </tr>
-    <tr>
-      <td>?</td>
-      <td>?</td>
-      <td>?</td>
-    </tr>
-    <tr>
-      <td>?</td>
-      <td>?</td>
-      <td>?</td>
-    </tr>
-    <tr>
-      <td>?</td>
-      <td>?</td>
-      <td>?</td>
-    </tr>
-    <tr>
-      <td>?</td>
-      <td>?</td>
-      <td>?</td>
-    </tr>
-    <tr>
-      <td>?</td>
-      <td>?</td>
-      <td>?</td>
-    </tr>
-    <tr>
-      <td>?</td>
-      <td>?</td>
-      <td>?</td>
-    </tr>
-    <tr>
-      <td>?</td>
-      <td>?</td>
-      <td>?</td>
-    </tr>
-  </table>
+        <tr>
+          <td>{{k_bucket_id}}</td>
+          <td>{{k_bucket_port}}</td>
+          <td><a href="{{kbucket_ip_address}}">{{kbucket_ip_address}}</a></td>
+          </td>
+        </tr>
+      </table>
+    </div>
 
+    <div class="floating-box">
+      <h2>Bucket 2</h2>
+      <table id="table2">
+        <tr>
+          <th>Node ID</th>
+          <th>Port</th>
+          <th>IP_address</th>
+        </tr>
+
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="floating-box">
+      <h2>Bucket 3</h2>
+      <table id="table3">
+        <tr>
+          <th>Node ID</th>
+          <th>Port</th>
+          <th>IP_address</th>
+        </tr>
+
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="floating-box">
+      <h2>Bucket 4</h2>
+      <table id="table4">
+        <tr>
+          <th>Node ID</th>
+          <th>Port</th>
+          <th>IP_address</th>
+        </tr>
+
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="floating-box">
+      <h2>Bucket 5</h2>
+      <table id="table5">
+        <tr>
+          <th>Node ID</th>
+          <th>Port</th>
+          <th>IP_address</th>
+        </tr>
+
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="floating-box">
+      <h2>Bucket 6</h2>
+      <table id="table6">
+        <tr>
+          <th>Node ID</th>
+          <th>Port</th>
+          <th>IP_address</th>
+        </tr>
+
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="floating-box">
+      <h2>Bucket 7</h2>
+      <table id="table7">
+        <tr>
+          <th>Node ID</th>
+          <th>Port</th>
+          <th>IP_address</th>
+        </tr>
+
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="floating-box">
+      <h2>Bucket 8</h2>
+      <table id="table8">
+        <tr>
+          <th>Node ID</th>
+          <th>Port</th>
+          <th>IP_address</th>
+        </tr>
+
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          </td>
+        </tr>
+      </table>
+    </div>
   <!--end of table -->
-
-  <script type="text/javascript">
-    console.log('hello');
-  </script>
-
-
-
 </body>
 
 </html>
