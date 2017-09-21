@@ -1,10 +1,9 @@
 // Npm Modules
-const express = require('express');
-const request = require('request-promise')
+var express = require('express'), bodyParser = require('body-parser');
+const request = require('request')
 const hbs = require('hbs');
 const yargs = require('yargs');
 const http = require("http");
-const bodyParser = require('body-parser');
 const _ = require('lodash');
 // js files
 const nodeCreator = require('./nodeCreator');
@@ -13,8 +12,9 @@ const kBucketManager = require('./kBucketManager');
 const portArgument = process.argv.slice(2)[0]
 
 var newNode = new nodeCreator(portArgument);
-var ID = newNode.ID;
-var port = newNode.port;
+const ID = newNode.ID;
+const port = newNode.port;
+console.log('My ID is - ' + ID);
 
 var app = express();
 var kbucket_0 = newNode.bucket_0;
@@ -26,53 +26,53 @@ var kbucket_5 = newNode.bucket_5;
 var kbucket_6 = newNode.bucket_6;
 var kbucket_7 = newNode.bucket_7;
 
-var kbucket;
+var my_kbucket;
 var my_ip_address = `http://localhost:${port}`;
 var kbucket_id;
 var kbucket_port;
 var kbucket_ip_address;
 
 app.set('view engine', 'hbs');
-app.use(bodyParser.urlencoded({
-  extended: false
-}))
-app.use(bodyParser.json());
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }));
+// parse application/json
+app.use(bodyParser.json())
 
 // precondition - program will terminate here if no argument is entered
 if (portArgument === undefined) {
   console.log('Enter port number as argument');
   return;
 }
-
-// request
-const get3501 = {
-  method: 'GET',
-  uri: 'http://localhost:3501/api/node/ping', // always ping port 3501
-  json: true
+if(port !== 3500){
+request.post(
+    'http://localhost:3500/api/node/ping',
+    { json: { id: ID, port: port } },
+    function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+						// console.log('request sent');
+						// // // response.remoteId = response.remoteId;
+						// // // response.remotePort = response.port;
+						// console.log(this.response.body);
+						handleResponse(this.response.body);
+        }
+    }
+);
 }
 
-hbs.registerHelper('ping', function ping() {
-  request(get3501)
-    .then(function(response) {
-      //console.log(response);
-      handleResponse(response);
-    })
-    .catch(function(err) {
-      console.log(err);
-    })
-});
-
 function handleResponse(response) {
+
   var s = new Set();
   s.add(response);
-  kbucket = Array.from(s);
-  //update kbucket
-  kbucket_id = kbucket[0].id;
-  kbucket_port = kbucket[0].port;
-  kbucket_ip_address = `http://localhost:${kbucket_port}`;
-  console.log('kbucket id ' + kbucket_id);
-  //attempt to put in correct bucket
-  var bucketNr = kBucketManager.kBucketManager(ID, kbucket_id);
+
+  my_kbucket = Array.from(s);
+
+  var bucketNr = kBucketManager.kBucketManager(ID, my_kbucket[0].remoteId);
   console.log('bucket nr: ' + bucketNr);
   var bucket = [];
 
@@ -105,7 +105,7 @@ function handleResponse(response) {
       console.log('bucket was 8, errors have been made');
   }
 
-  var update_response = kBucketManager.updateBucket(kbucket_0, kbucket_id);
+  var update_response = kBucketManager.updateBucket(kbucket_0, my_kbucket[0].remoteId);
   console.log('update_response ' + update_response);
 
   switch (bucketNr) {
@@ -146,7 +146,35 @@ function handleResponse(response) {
 	console.log(kbucket_7);
 };
 
-
+hbs.registerHelper('callMeForBuckets', function callMeForBuckets(bucketNumber){
+		if(kbucket_0 !== undefined && bucketNumber == 0){
+			return kbucket_0;
+		}
+		if(kbucket_1 !== undefined && bucketNumber == 1){
+			return kbucket_1;
+		}
+		if(kbucket_2 !== undefined && bucketNumber == 2){
+			return kbucket_2;
+		}
+		if(kbucket_3 !== undefined && bucketNumber == 3){
+			return kbucket_3;
+		}
+		if(kbucket_3 !== undefined && bucketNumber == 3){
+			return kbucket_3;
+		}
+		if(kbucket_4 !== undefined && bucketNumber == 4){
+			return kbucket_4;
+		}
+		if(kbucket_5 !== undefined && bucketNumber == 5){
+			return kbucket_5;
+		}
+		if(kbucket_6 !== undefined && bucketNumber == 6){
+			return kbucket_6;
+		}
+		if(kbucket_7 !== undefined && bucketNumber == 7){
+			return kbucket_7;
+		}else return '---';
+});
 
 // bucket
 // ID - på dem man kender
@@ -159,9 +187,17 @@ app.get('/', function update(req, res) {
     node_id: ID,
     node_port_number: port,
     my_ip_address: my_ip_address,
-    kbucket_ip_address: kbucket_ip_address,
-    k_bucket_id: kbucket_id,
-    k_bucket_port: kbucket_port
+		kbucket_0: kbucket_0,
+		kbucket_1: kbucket_1,
+		kbucket_2: kbucket_2,
+		kbucket_3: kbucket_3,
+		kbucket_4: kbucket_4,
+		kbucket_5: kbucket_5,
+		kbucket_6: kbucket_6,
+		kbucket_7: kbucket_7
+    // kbucket_ip_address: kbucket_ip_address,
+    // k_bucket_id: kbucket_id,
+    // k_bucket_port: kbucket_port
   });
 })
 
@@ -180,6 +216,7 @@ app.get('/api/node/ping', function(req, res) {
     port: port
   });
 })
+
 
 app.get('/api/node/info', function(req, res) {
   res.send({
@@ -200,6 +237,25 @@ app.get('/api/node/:id', function(req, res) {
     id: ID
   });
 })
+
+var jsonParser = bodyParser.json()
+
+var remoteId;
+var remotePort;
+var response = {
+	remoteId,
+	remotePort
+};
+app.post('/api/node/ping', jsonParser, function(req, res) {
+		if (!req.body) return res.sendStatus(400);
+		// console.log(req.body.id);
+		// console.log(req.body.port);
+		response.remoteId = req.body.id;
+		response.remotePort = req.body.port;
+		res.send({'event': 'PONG', 'remoteId': ID, 'port': port});
+		handleResponse(response);
+})
+
 // start sever
 // to 'sudo killall node'
 app.listen(port, function() {

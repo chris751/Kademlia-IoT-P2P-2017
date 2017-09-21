@@ -5,23 +5,22 @@ var kBucketManager = function kBucketManager(managerId,sortedId){
 	this.sortedId = sortedId; // her skal anvendes det ID'et for den node som skal sorteres.
 	this.managerId = managerId; //her skal anvendes det ID'et fra den node som bruger metoden
 
-	console.log('id1 - '+ managerId + ' id2 - '+ sortedId);
+	console.log('Preparing to XOR my ID('+ managerId+')' + ' with other ID - ('+ sortedId+')');
 	var xorResult = (parseInt(managerId, 2) ^ parseInt(sortedId, 2));
 	// console.log(xorResult);
 	var xorResult= xorResult.toString(2);
 	// console.log(xorResult);
 	// console.log(typeof(xorResult));
 	xorResult = idGenerator.leftPad(xorResult, 8);
-	// console.log('left pad ' + xorResult);
+	console.log('XOR result = ' + xorResult);
 
 	//I dette tilfælde burde 8 være K, hvor K er i forbindelse med K bucket
 	var j = 8;
 	for(i=0;i<8;i++){
 		 j--;
 		if (xorResult.charAt(i) == 1){
-
-			console.log('loop startet');
-			console.log('looped' + i +'times');
+			// console.log('loop startet');
+			// console.log('looped' + i +'times');
 			return j;
 		}
 	}
@@ -33,7 +32,6 @@ var updateBucket = function updateBucket(bucket, newNodeId){
 	var s = new Set();
   s.add(newNodeId);
   bucket = Array.from(s);
-
 	return bucket;
 
 	// for(i=0; i<bucket.length; i++){
