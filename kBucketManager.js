@@ -33,7 +33,8 @@ var kBucketManager = function(managerId, sortedId) {
 
 //takes the bucket number and the new node
 var updateBucket = function(bucket, newNodeId) {
-	var anotherArray = bucket;
+  var someArray = [];
+	someArray.push(newNodeId);
   console.log('my bucket is');
   console.log(bucket);
   if (bucket !== undefined) {
