@@ -1,6 +1,6 @@
 # P2Pstuff
-Project in IOT/P2P
+Kademlia
 
-TO start servers : ./start.sh
+TO start servers : bash start.sh
 
 To stop servers : sudo killall node
