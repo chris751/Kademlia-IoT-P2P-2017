@@ -72,12 +72,13 @@ request.post(
 
 // var s = new Set();
 function handleResponse(response) {
+	console.log('handleResponse started by '+ port);
 	var dataClone = _.cloneDeep(response);  //create deep clone
 	my_kbucket.push(dataClone);           //push into the array
   // s.add(response);
-	//console.log(response);
+	console.log(response);
   // my_kbucket = Array.from(s); //convert set to array
-	console.log('handleResponse started by '+ port);
+
 	//console.log(my_kbucket);
 
 
@@ -85,13 +86,16 @@ function handleResponse(response) {
   console.log('bucket nr: ' + bucketNr);
   var bucket = [];
 
-	myBucketArray[bucketNr].push(dataClone);
+	// myBucketArray[bucketNr].push(dataClone);
+
+
 	console.log(myBucketArray);
 
-
 	bucket = myBucketArray[bucketNr];
+	console.log('bucket from main is');
+	console.log(response.remoteId);
 
-  var update_response = kBucketManager.updateBucket(bucket, my_kbucket[0].remoteId);
+  var update_response = kBucketManager.updateBucket(bucket, response.remoteId);
   console.log('update_response ' + update_response);
 
 	myBucketArray[bucketNr] = update_response;
@@ -190,5 +194,3 @@ app.post('/api/node/ping', jsonParser, function(req, res) {
 app.listen(port, function() {
   console.log(`Server is up on port ${port}`)
 });
-
-modules.exports = myBucketArray;
