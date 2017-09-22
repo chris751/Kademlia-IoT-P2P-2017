@@ -190,3 +190,5 @@ app.post('/api/node/ping', jsonParser, function(req, res) {
 app.listen(port, function() {
   console.log(`Server is up on port ${port}`)
 });
+
+modules.exports = myBucketArray;
