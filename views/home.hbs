@@ -7,6 +7,46 @@
 </head>
 
 <body>
+
+    <style>
+      body {
+        margin-left: 3%;
+        margin-right: 3%;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      table,
+      td,
+      th {
+        border: 1px solid #9E9E9E;
+        text-align: left;
+      }
+
+      table {
+        margin-top: 2%;
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      th,
+      td {
+        text-align: left;
+        padding: 7px;
+      }
+
+      th {
+        background-color: #2196F3;
+        color: white;
+      }
+
+      .floating-box {
+        float: left;
+        width: 31%;
+        height: 110px;
+        margin: 10px;
+      }
+    </style>
+  
   <h1>Kademlia</h1>
   <h3>Node ID</h3>
   <p>{{node_id}}</p>
@@ -24,191 +64,104 @@
 
   <!-- start of table -->
 
-  <style>
-    body {
-      margin-left: 3%;
-      margin-right: 3%;
-      font-family: Arial, Helvetica, sans-serif;
-    }
 
-    table,
-    td,
-    th {
-      border: 1px solid #9E9E9E;
-      text-align: left;
-    }
+  <div class="floating-box">
+    <h2>Bucket 0</h2>
+    <table id="table1">
+      <tr>
+        <th>Node ID</th>
+        <th>Port</th>
+        <th>IP_address</th>
+      </tr>
 
-    table {
-      margin-top: 2%;
-      border-collapse: collapse;
-      width: 100%;
-    }
+      {{#list "0"}}{{/list}}
 
-    th,
-    td {
-      text-align: left;
-      padding: 7px;
-    }
+    </table>
+  </div>
 
-    th {
-      background-color: #2196F3;
-      color: white;
-    }
+  <div class="floating-box">
+    <h2>Bucket 1</h2>
+    <table id="table2">
+      <tr>
+        <th>Node ID</th>
+        <th>Port</th>
+        <th>IP address</th>
+      </tr>
+      {{#list "1"}}{{/list}}
+    </table>
+  </div>
 
-    .floating-box {
-      float: left;
-      width: 31%;
-      height: 110px;
-      margin: 10px;
-    }
-  </style>
+  <div class="floating-box">
+    <h2>Bucket 2</h2>
+    <table id="table3">
+      <tr>
+        <th>Node ID</th>
+        <th>Port</th>
+        <th>IP address</th>
+      </tr>
+      {{#list "2"}}{{/list}}
+    </table>
+  </div>
 
-    <div class="floating-box">
-      <h2>Bucket 0</h2>
-      <table id="table1">
-        <tr>
-          <th>Node ID</th>
-          <th>Port</th>
-          <th>IP_address</th>
-        </tr>
+  <div class="floating-box">
+    <h2>Bucket 3</h2>
+    <table id="table4">
+      <tr>
+        <th>Node ID</th>
+        <th>Port</th>
+        <th>IP address</th>
+      </tr>
+      {{#list "3"}}{{/list}}
+    </table>
+  </div>
 
-        <tr>
-          <td>{{callMeForBuckets 0}} </td>
-          <td></td>
-          <td><a href="{{kbucket_ip_address}}">{{kbucket_ip_address}}</a></td>
-          </td>
-        </tr>
-      </table>
-    </div>
+  <div class="floating-box">
+    <h2>Bucket 4</h2>
+    <table id="table5">
+      <tr>
+        <th>Node ID</th>
+        <th>Port</th>
+        <th>IP address</th>
+      </tr>
+      {{#list "4"}}{{/list}}
+    </table>
+  </div>
 
-    <div class="floating-box">
-      <h2>Bucket 1</h2>
-      <table id="table2">
-        <tr>
-          <th>Node ID</th>
-          <th>Port</th>
-          <th>IP_address</th>
-        </tr>
+  <div class="floating-box">
+    <h2>Bucket 5</h2>
+    <table id="table6">
+      <tr>
+        <th>Node ID</th>
+        <th>Port</th>
+        <th>IP address</th>
+      </tr>
+      {{#list "5"}}{{/list}}
+    </table>
+  </div>
 
-        <tr>
-          <td>{{callMeForBuckets 1}}</td>
-          <td></td>
-          <td></td>
-          </td>
-        </tr>
+  <div class="floating-box">
+    <h2>Bucket 6</h2>
+    <table id="table7">
+      <tr>
+        <th>Node ID</th>
+        <th>Port</th>
+        <th>IP address</th>
+      </tr>
+      {{#list "6"}}{{/list}}
+    </table>
+  </div>
 
-      </table>
-    </div>
-
-    <div class="floating-box">
-      <h2>Bucket 2</h2>
-      <table id="table3">
-        <tr>
-          <th>Node ID</th>
-          <th>Port</th>
-          <th>IP_address</th>
-        </tr>
-
-        <tr>
-          <td>{{callMeForBuckets 2}}</td>
-          <td></td>
-          <td></td>
-          </td>
-        </tr>
-      </table>
-    </div>
-
-    <div class="floating-box">
-      <h2>Bucket 3</h2>
-      <table id="table4">
-        <tr>
-          <th>Node ID</th>
-          <th>Port</th>
-          <th>IP_address</th>
-        </tr>
-
-        <tr>
-          <td>{{callMeForBuckets 3}}</td>
-          <td></td>
-          <td></td>
-          </td>
-        </tr>
-      </table>
-    </div>
-
-    <div class="floating-box">
-      <h2>Bucket 4</h2>
-      <table id="table5">
-        <tr>
-          <th>Node ID</th>
-          <th>Port</th>
-          <th>IP_address</th>
-        </tr>
-
-        <tr>
-          <td>{{callMeForBuckets 4}}</td>
-          <td></td>
-          <td></td>
-          </td>
-        </tr>
-      </table>
-    </div>
-
-    <div class="floating-box">
-      <h2>Bucket 5</h2>
-      <table id="table6">
-        <tr>
-          <th>Node ID</th>
-          <th>Port</th>
-          <th>IP_address</th>
-        </tr>
-
-        <tr>
-          <td>{{callMeForBuckets 5}}</td>
-          <td></td>
-          <td></td>
-          </td>
-        </tr>
-      </table>
-    </div>
-
-    <div class="floating-box">
-      <h2>Bucket 6</h2>
-      <table id="table7">
-        <tr>
-          <th>Node ID</th>
-          <th>Port</th>
-          <th>IP_address</th>
-        </tr>
-
-        <tr>
-          <td>{{callMeForBuckets 6}}</td>
-          <td></td>
-          <td></td>
-          </td>
-        </tr>
-      </table>
-    </div>
-
-    <div class="floating-box">
-      <h2>Bucket 7</h2>
-      <table id="table8">
-        <tr>
-          <th>Node ID</th>
-          <th>Port</th>
-          <th>IP_address</th>
-        </tr>
-
-        <tr>
-          <td>{{callMeForBuckets 7}}</td>
-          <td></td>
-          <td></td>
-          </td>
-        </tr>
-
-
-      </table>
-    </div>
+  <div class="floating-box">
+    <h2>Bucket 7</h2>
+    <table id="table8">
+      <tr>
+        <th>Node ID</th>
+        <th>Port</th>
+        <th>IP address</th>
+      </tr>
+      {{#list "7"}}{{/list}}
+    </table>
+  </div>
   <!--end of table -->
 </body>
 

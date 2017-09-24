@@ -32,22 +32,22 @@ var kBucketManager = function(managerId, sortedId) {
 }
 
 //takes the bucket number and the new node
-var updateBucket = function(bucket, newNodeId) {
+var updateBucket = function(bucket, newNodeObject) {
   var someArray = [];
-	someArray.push(newNodeId);
+	someArray.push(newNodeObject);
   console.log('my bucket is');
   console.log(bucket);
   if (bucket !== undefined) {
     for (i = 0; i < bucket.length; i++) {
-      if (bucket[i] == newNodeId) {
+      if (bucket[i] == newNodeObject.remoteId) {
         //placer den kendte node i bagerst i arrayet
         console.log('inside loop');
         bucket.splice(i, 1);
-        bucket.push(newNodeId);
+        bucket.push(newNodeObject);
         return bucket;
         //returner et updateret array
       }
-    } bucket.push(newNodeId);
+    } bucket.push(newNodeObject);
 		return bucket;
 
   }return someArray;
