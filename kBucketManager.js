@@ -1,30 +1,18 @@
 //Denne metode returnere et nummer, som er tilsvarende den KBucket, som sortedID skal placeres i.
 const idGenerator = require("./idGenerator.js");
-const main2 = require("./main2.js");
-
 
 var k = 8;
 
 var kBucketManager = function(managerId, sortedId) {
-  this.sortedId = sortedId; // her skal anvendes det ID'et for den node som skal sorteres.
-  this.managerId = managerId; //her skal anvendes det ID'et fra den node som bruger metoden
-
-  console.log('Preparing to XOR my ID(' + managerId + ')' + ' with other ID - (' + sortedId + ')');
   var xorResult = (parseInt(managerId, 2) ^ parseInt(sortedId, 2));
-  // console.log(xorResult);
   var xorResult = xorResult.toString(2);
-  // console.log(xorResult);
-  // console.log(typeof(xorResult));
   xorResult = idGenerator.leftPad(xorResult, k);
-  console.log('XOR result = ' + xorResult);
 
   //I dette tilfælde burde 8 være K, hvor K er i forbindelse med K bucket
   var j = k;
   for (i = 0; i < k; i++) {
     j--;
     if (xorResult.charAt(i) == 1) {
-      // console.log('loop startet');
-      // console.log('looped' + i +'times');
       return j;
     }
   }
@@ -34,7 +22,7 @@ var kBucketManager = function(managerId, sortedId) {
 //takes the bucket number and the new node
 var updateBucket = function(bucket, newNodeObject) {
   var someArray = [];
-	someArray.push(newNodeObject);
+  someArray.push(newNodeObject);
   console.log('my bucket is');
   console.log(bucket);
   if (bucket !== undefined) {
@@ -47,10 +35,12 @@ var updateBucket = function(bucket, newNodeObject) {
         return bucket;
         //returner et updateret array
       }
-    } bucket.push(newNodeObject);
-		return bucket;
+    }
+    bucket.push(newNodeObject);
+    return bucket;
 
-  }return someArray;
+  }
+  return someArray;
 
   //
   // if(bucket.length >= k-1){ //7 skal i dette tilfalde være K-1,altså antallet af mulige kontaker i en KBucket
