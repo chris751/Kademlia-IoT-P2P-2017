@@ -7,16 +7,14 @@ function findNode(askedNode, findId){
 
 	var closest;
 	var xorValue;
-
 	var closestNode;
 
 	for(i = 0; i < bucket.length; i++){
 		if(bucket[i] === findId){
-			return [askedNode.ID, askedNode.port];	
-		} 
+			return [askedNode.ID, askedNode.port];
+		}
 		else{
 			var xorValue = xorID.xorID(askedNode, findId);
-			
 			if(closest === null){
 				closest = xorValue;
 				closestNode = askedNode.bucket[i];
@@ -25,11 +23,8 @@ function findNode(askedNode, findId){
 				closest = xorValue;
 				closestNode = askedNode.bucket[i];
 			}
-
 		}
-		
 	}
-
 	return findNode(closestNode, findId);
 }
 

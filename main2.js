@@ -108,14 +108,38 @@ function handleResponse(response) {
 
 };
 
+
+// Handlebars.registerHelper('list2', function(items, options) {
+//   var out = "<tr>";
+//
+//   for(var i=0, l=items.length; i<l; i++) {
+//     out = out + "<th>" + options.fn(items[i]) + "</th>";
+//   }
+//
+//   return out + "</tr>";
+// });
+
+
 hbs.registerHelper('callMeForBuckets', function callMeForBuckets(bucketNumber){
+	var out = "<tr>";
 	for(i=0; i<8; i++){
-		// console.log(myBucketArray[i]);
 		if(myBucketArray[i] !== undefined && bucketNumber == i){
-			return myBucketArray[i];
+			out = out + "<th>" + myBucketArray[i] + "</th>";
 		}
 	}
+	return out + "</tr>";
 });
+
+// hbs.registerHelper('table', function(bucketNumber){
+// 	var out = "<tr>";
+// 	for(i=0; i<8; i++){
+// 		if(myBucketArray[i] !== undefined && bucketNumber == i){
+// 			out = out + "<th>" + myBucketArray[i] + "</th>";
+// 		}
+// 	}
+// 	return out + "</tr>";
+// });
+
 
 // setup homepage
 app.get('/', function update(req, res) {
