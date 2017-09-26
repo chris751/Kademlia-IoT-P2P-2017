@@ -46,6 +46,8 @@ app.use(bodyParser.urlencoded({
 // parse application/json
 app.use(bodyParser.json())
 
+hbs.registerPartials(__dirname + '/views/partials');
+
 // precondition - program will terminate here if no argument is entered
 if (portArgument === undefined) {
   console.log('Enter port number as argument');
@@ -143,6 +145,7 @@ app.post('/api/node/ping', jsonParser, function(req, res) {
   response.remoteId = req.body.remoteId;
   response.remotePort = req.body.remotePort;
   response.remoteIp = req.body.remoteIp;
+  console.log(req.body);
   handleResponse(response);
   res.send({
     'event': 'PONG',

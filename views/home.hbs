@@ -8,159 +8,182 @@
 
 <body>
 
-    <style>
-      body {
-        margin-left: 3%;
-        margin-right: 3%;
-        font-family: Arial, Helvetica, sans-serif;
-      }
+  <style>
+    html {
+      height: 100%;
+    }
 
-      table,
-      td,
-      th {
-        border: 1px solid #9E9E9E;
-        text-align: left;
-      }
+    body {
+      margin-left: 1%;
+      margin-right: 3%;
+      font-family: Arial, Helvetica, sans-serif;
+    }
 
-      table {
-        margin-top: 2%;
-        border-collapse: collapse;
-        width: 100%;
-      }
+    table,
+    td,
+    th {
+      border: 1px solid #9E9E9E;
+      text-align: left;
+    }
 
-      th,
-      td {
-        text-align: left;
-        padding: 7px;
-      }
+    table {
+      margin-top: 2%;
+      border-collapse: collapse;
+      width: 100%;
+    }
 
-      th {
-        background-color: #2196F3;
-        color: white;
-      }
+    th,
+    td {
+      text-align: left;
+      padding: 7px;
+    }
 
-      .floating-box {
-        float: left;
-        width: 31%;
-        height: 110px;
-        margin: 10px;
-      }
-    </style>
-  
-  <h1>Kademlia</h1>
-  <h3>Node ID</h3>
-  <p>{{node_id}}</p>
-  <h3>Port Number</h3>
-  <p>{{node_port_number}}</p>
-  <h3>Node URI</h3>
-  <p>{{my_ip_address}}</p>
-  <form name="portForm" action="{{ping}}">
-    <input type="submit" value="PING" />
-  </form>
-  <br>
-  <form name="portForm" action="{{ping}}">
-    <input type="submit" value="DISCOVER" />
-  </form>
+    th {
+      background-color: #2196F3;
+      color: white;
+    }
+
+    .floating-box {
+      float: left;
+      width: 31%;
+      height: 20%;
+      margin: 1%;
+    }
+
+    .float_left {
+      width: 15%;
+      float: left;
+      border-right: 2px solid black;
+      padding-right: 1%;
+    }
+
+    .wrap-box {
+      float: right;
+      width: 83%;
+    }
+
+    input[type=text],
+    select {
+      width: 100%;
+      padding: 12px 20px;
+      margin: 8px 0;
+      display: inline-block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    input[type=submit] {
+      width: 100%;
+      background-color: #F44336;
+      color: white;
+      padding: 14px 20px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    input[type=submit]:hover {
+      background-color: #D32F2F;
+    }
+
+    .form {
+      border-radius: 5px;
+    }
+
+    .info {
+      border-bottom:  2px solid black;
+      margin-bottom: 25px;
+    }
+  </style>
+
+  <div class="float_left">
+    <div class="info">
+      <h1>Kademlia</h1>
+      <h3>Node ID</h3>
+      <p>{{node_id}}</p>
+      <h3>Port Number</h3>
+      <p>{{node_port_number}}</p>
+      <h3>Node URI</h3>
+      <p>{{my_ip_address}}</p>
+    </div>
+
+    <div class="form">
+      <form action="">
+        <input type="text" id="portNumber" name="port" placeholder="Port number">
+        </select>
+        <input type="submit" value="PING">
+      </form>
+    </div>
+  </div>
 
   <!-- start of table -->
+  <div class="wrap-box">
+    <div class="floating-box">
+      <h2>Bucket 0</h2>
+      <table>
+        {{> table}}
+        {{#list "0"}}{{/list}}
+      </table>
+    </div>
 
+    <div class="floating-box">
+      <h2>Bucket 1</h2>
+      <table>
+        {{> table}}
+        {{#list "1"}}{{/list}}
+      </table>
+    </div>
 
-  <div class="floating-box">
-    <h2>Bucket 0</h2>
-    <table id="table1">
-      <tr>
-        <th>Node ID</th>
-        <th>Port</th>
-        <th>IP_address</th>
-      </tr>
+    <div class="floating-box">
+      <h2>Bucket 2</h2>
+      <table>
+        {{> table}}
+        {{#list "2"}}{{/list}}
+      </table>
+    </div>
 
-      {{#list "0"}}{{/list}}
+    <div class="floating-box">
+      <h2>Bucket 3</h2>
+      <table>
+        {{> table}}
+        {{#list "3"}}{{/list}}
+      </table>
+    </div>
 
-    </table>
-  </div>
+    <div class="floating-box">
+      <h2>Bucket 4</h2>
+      <table>
+        {{> table}}
+        {{#list "4"}}{{/list}}
+      </table>
+    </div>
 
-  <div class="floating-box">
-    <h2>Bucket 1</h2>
-    <table id="table2">
-      <tr>
-        <th>Node ID</th>
-        <th>Port</th>
-        <th>IP address</th>
-      </tr>
-      {{#list "1"}}{{/list}}
-    </table>
-  </div>
+    <div class="floating-box">
+      <h2>Bucket 5</h2>
+      <table>
+        {{> table}}
+        {{#list "5"}}{{/list}}
+      </table>
+    </div>
 
-  <div class="floating-box">
-    <h2>Bucket 2</h2>
-    <table id="table3">
-      <tr>
-        <th>Node ID</th>
-        <th>Port</th>
-        <th>IP address</th>
-      </tr>
-      {{#list "2"}}{{/list}}
-    </table>
-  </div>
+    <div class="floating-box">
+      <h2>Bucket 6</h2>
+      <table>
+        {{> table}}
+        {{#list "6"}}{{/list}}
+      </table>
+    </div>
 
-  <div class="floating-box">
-    <h2>Bucket 3</h2>
-    <table id="table4">
-      <tr>
-        <th>Node ID</th>
-        <th>Port</th>
-        <th>IP address</th>
-      </tr>
-      {{#list "3"}}{{/list}}
-    </table>
-  </div>
+    <div class="floating-box">
+      <h2>Bucket 7</h2>
+      <table>
+        {{> table}}
+        {{#list "7"}}{{/list}}
+      </table>
+    </div>
 
-  <div class="floating-box">
-    <h2>Bucket 4</h2>
-    <table id="table5">
-      <tr>
-        <th>Node ID</th>
-        <th>Port</th>
-        <th>IP address</th>
-      </tr>
-      {{#list "4"}}{{/list}}
-    </table>
-  </div>
-
-  <div class="floating-box">
-    <h2>Bucket 5</h2>
-    <table id="table6">
-      <tr>
-        <th>Node ID</th>
-        <th>Port</th>
-        <th>IP address</th>
-      </tr>
-      {{#list "5"}}{{/list}}
-    </table>
-  </div>
-
-  <div class="floating-box">
-    <h2>Bucket 6</h2>
-    <table id="table7">
-      <tr>
-        <th>Node ID</th>
-        <th>Port</th>
-        <th>IP address</th>
-      </tr>
-      {{#list "6"}}{{/list}}
-    </table>
-  </div>
-
-  <div class="floating-box">
-    <h2>Bucket 7</h2>
-    <table id="table8">
-      <tr>
-        <th>Node ID</th>
-        <th>Port</th>
-        <th>IP address</th>
-      </tr>
-      {{#list "7"}}{{/list}}
-    </table>
   </div>
   <!--end of table -->
 </body>
