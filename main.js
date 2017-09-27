@@ -5,6 +5,7 @@ const hbs = require('hbs');
 const yargs = require('yargs');
 const http = require("http");
 const _ = require('lodash');
+const FormData = require('form-data');
 
 // custom modules
 const nodeCreator = require('./nodeCreator');
@@ -54,7 +55,7 @@ if (portArgument === undefined) {
   return;
 }
 
-communication.sendping(ID, port, my_ip); //send ping when a node is created
+communication.sendBootNodePing(ID, port, my_ip); //send ping when a node is created
 
 function handleResponse(response) {
   var dataClone = _.cloneDeep(response); //create deep clone
@@ -67,6 +68,10 @@ function handleResponse(response) {
     console.log(myBucketArray[i]);
   }
 };
+
+hbs.registerHelper('ping', function(port) {
+  //console.log(port);
+});
 
 hbs.registerHelper('list', function(bucketNumber) {
   var out = '';
@@ -145,6 +150,7 @@ app.post('/api/node/ping', jsonParser, function(req, res) {
   response.remoteId = req.body.remoteId;
   response.remotePort = req.body.remotePort;
   response.remoteIp = req.body.remoteIp;
+  console.log('ping recieved....');
   console.log(req.body);
   handleResponse(response);
   res.send({
