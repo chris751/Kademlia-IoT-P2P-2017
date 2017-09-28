@@ -109,12 +109,6 @@ app.get('/api/node', function(req, res) {
   res.send('node')
 })
 
-app.get('/api/node/ping', function(req, res) {
-  res.send({
-    id: ID,
-    port: port
-  });
-})
 
 app.get('/api/node/info', function(req, res) {
   res.send({
@@ -126,18 +120,10 @@ app.get('/api/node/info', function(req, res) {
 
 app.get('/api/node/bucket', function(req, res) {
   res.send({
-    node: kbucket
+    node_buckets: myBucketArray
   });
 })
 
-app.post('/api/node/findnode', function(req, res){
-  if (!req.body) return res.sendStatus(400);
-  findNode.findNode(ID, req.body.remoteId);
-  console.log('hello from find_node');
-  res.send({
-    'event': 'find_node'
-  });
-});
 
 var jsonParser = bodyParser.json()
 var remoteId;
@@ -148,6 +134,24 @@ var response = {
   remotePort,
   remoteIp
 };
+
+var res = [];
+
+app.post('/findnode', function(req, result) {
+
+  var getResult = (callback) => {
+    res = findNode.findNode(ID, req.body.remoteId, myBucketArray);
+
+    setTimeout(() => {
+      callback(res);
+    }, 50);
+  };
+
+  getResult((res) => {
+    result.send(res);
+  });
+})
+
 
 app.post('/api/node/ping', jsonParser, function(req, res) {
   if (!req.body) return res.sendStatus(400);
