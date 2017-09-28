@@ -5,12 +5,13 @@ const hbs = require('hbs');
 const yargs = require('yargs');
 const http = require("http");
 const _ = require('lodash');
-const FormData = require('form-data');
+
 
 // custom modules
 const nodeCreator = require('./nodeCreator');
 const kBucketManager = require('./kBucketManager');
 const communication = require('./communication');
+const findNode = require('./findNode');
 // variables
 const portArgument = process.argv.slice(2)[0]
 
@@ -129,11 +130,14 @@ app.get('/api/node/bucket', function(req, res) {
   });
 })
 
-app.get('/api/node/:id', function(req, res) {
+app.post('/api/node/findnode', function(req, res){
+  if (!req.body) return res.sendStatus(400);
+  findNode.findNode(ID, req.body.remoteId);
+  console.log('hello from find_node');
   res.send({
-    id: ID
+    'event': 'find_node'
   });
-})
+});
 
 var jsonParser = bodyParser.json()
 var remoteId;
