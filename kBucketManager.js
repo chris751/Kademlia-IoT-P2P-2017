@@ -27,7 +27,7 @@ var updateBucket = function(bucket, newNodeObject) {
   console.log(bucket);
   if (bucket !== undefined) {
     for (i = 0; i < bucket.length; i++) {
-      if (bucket[i] == newNodeObject.remoteId) {
+      if (bucket[i].remoteId == newNodeObject.remoteId) {
         //placer den kendte node i bagerst i arrayet
         console.log('inside loop');
         bucket.splice(i, 1);

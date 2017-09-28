@@ -150,8 +150,6 @@ app.post('/api/node/ping', jsonParser, function(req, res) {
   response.remoteId = req.body.remoteId;
   response.remotePort = req.body.remotePort;
   response.remoteIp = req.body.remoteIp;
-  console.log('ping recieved....');
-  console.log(req.body);
   handleResponse(response);
   res.send({
     'event': 'PONG',
