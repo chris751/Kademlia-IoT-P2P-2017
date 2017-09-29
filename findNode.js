@@ -50,7 +50,7 @@ var nodeLookup = function(myId, idWeWant, myBucketArray) {
     for (i = 0; i < shortList.length; i++) {
       communication.findNodeRequest(idWeWant, shortList[i].remotePort);
 
-      console.log('asked port' + shortList[i].remotePort);
+      console.log('asked port: ' + shortList[i].remotePort);
 
       setTimeout(() => {
         callback(kClosetNodes);
@@ -59,7 +59,7 @@ var nodeLookup = function(myId, idWeWant, myBucketArray) {
   }
 
   getResult(kClosetNodes => {
-    console.log('value returned is' + kClosetNodes);
+    console.log('value returned is: ' + kClosetNodes);
     return kClosetNodes;
   });
 }

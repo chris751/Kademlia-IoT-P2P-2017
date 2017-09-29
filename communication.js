@@ -32,11 +32,6 @@ exports.findNodeRequest = function findNodeRequest(idWeWant, port) {
     },
     function(error, response, body) {
       if (!error && response.statusCode == 200) {
-        // main.handleResponse(this.response.body);
-
-        // findNode.getData(this.response.body);
-
-        // findNode.recieveData(this.response.body);
         findNode.handleResponse(this.response.body);
       }
     }
