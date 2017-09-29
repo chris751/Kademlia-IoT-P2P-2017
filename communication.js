@@ -20,20 +20,3 @@ exports.sendBootNodePing = function ping(ID, port, my_ip) {
     );
   }
 }
-
-exports.sendFormPing = function formPing(sendToPort, ID, port, my_ip) {
-    request.post(
-      `http://localhost:${sendToPort}/api/node/ping`, {
-        json: {
-          remoteId: ID,
-          remotePort: port,
-          remoteIp: my_ip
-        }
-      },
-      function(error, response, body) {
-        if (!error && response.statusCode == 200) {
-          main.handleResponse(this.response.body);
-        }
-      }
-    );
-}

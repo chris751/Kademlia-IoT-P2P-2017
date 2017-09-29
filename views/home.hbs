@@ -111,27 +111,40 @@
 
 
     </div>
-
+  <h3>PING</h3>
     <div class="form">
       <form id="registerform">
         <input type="text" name="sendToPort" placeholder="Enter port number to ping">
+        <div id="ifYes" style="display:none">
         <input type="text" name="remoteId" value="{{node_id}}">
         <input type="text" name="remotePort" value="{{node_port_number}}">
         <input type="text" name="remoteIp" value="{{my_ip_address}}">
+        </div>
         <input type="submit" onclick="update()" value="PING">
       </form>
     </div>
-    <p id="event"></p>
-    <p id="event1"></p>
-    <p id="event2"></p>
-    <p id="event3"></p>
+    <h3>Find_node</h3>
+
+    <form id="findnodeform">
+      <input type="text" name="find_port" placeholder="Enter port number to check for node">
+      <input type="text" name="remoteId" placeholder="Enter ID to search for">
+
+      <input type="submit" onclick="update()" value="Find_Node">
+    </form>
   </div>
 
 
   <script>
+
+  document.getElementById('ifYes').style.display = 'none';
     var remotePort;
+    var find_port;
+    var find_id;
+
     function update() {
       remotePort = document.forms['registerform'].elements['sendToPort'].value;
+      find_port = document.forms['findnodeform'].elements['find_port'].value;
+      find_id = document.forms['findnodeform'].elements['remoteId'].value;
       console.log(remotePort);
     }
     $(function() {
@@ -148,10 +161,33 @@
           success: function(data) {
             console.log(data);
             console.log('process sucess');
-            document.getElementById("event").innerHTML = data.event;
-            document.getElementById("event1").innerHTML = data.remoteId;
-            document.getElementById("event2").innerHTML = data.remotePort;
-            document.getElementById("event3").innerHTML = data.remoteIp;
+            var myJSON = JSON.stringify(data);
+            alert(myJSON);
+          },
+
+          error: function() {
+            console.log('process error');
+          },
+        });
+      });
+    });
+
+    $(function() {
+      $("#findnodeform").on("submit", function(e) {
+        e.preventDefault();
+        $.ajax({
+          url: 'http://localhost:' + find_port + '/findnode',
+          type: 'POST',
+          data: $(this).serialize(),
+          complete: function() {
+            //called when complete
+            console.log('process complete');
+          },
+          success: function(data) {
+            console.log(data);
+            var myJSON = JSON.stringify(data);
+            alert(myJSON);
+            console.log('process sucess');
           },
 
           error: function() {
