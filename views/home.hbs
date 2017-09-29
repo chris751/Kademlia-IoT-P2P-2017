@@ -126,27 +126,44 @@
     <h3>Find_node</h3>
 
     <form id="findnodeform">
-      <input type="text" name="find_port" placeholder="Enter port number to check for node">
+      <div id="ifYes" style="display:none">
+      <input type="text" name="find_port" value="{{node_port_number}}">
+        </div>
       <input type="text" name="remoteId" placeholder="Enter ID to search for">
 
       <input type="submit" onclick="update()" value="Find_Node">
     </form>
+
+
+    <h3>Node_lookup</h3>
+    <form id="nodelookupform">
+      <input type="text" name="remoteId" placeholder="Enter ID to search for">
+<div id="ifYes" style="display:none">
+      <input type="text" name="node_lookup_port" value="{{node_port_number}}">
+      <input type="text" name="decision" value="something">
+</div>
+      <input type="submit" onclick="updateNodeLookupForm()" value="Look_up">
+    </form>
   </div>
-
-
   <script>
 
   document.getElementById('ifYes').style.display = 'none';
     var remotePort;
     var find_port;
     var find_id;
+    var node_lookup_id;
+    var node_lookup_port;
+
+    function updateNodeLookupForm(){
+      node_lookup_port = document.forms['nodelookupform'].elements['node_lookup_port'].value;
+    }
 
     function update() {
       remotePort = document.forms['registerform'].elements['sendToPort'].value;
       find_port = document.forms['findnodeform'].elements['find_port'].value;
       find_id = document.forms['findnodeform'].elements['remoteId'].value;
-      console.log(remotePort);
     }
+
     $(function() {
       $("#registerform").on("submit", function(e) {
         e.preventDefault();
@@ -196,6 +213,33 @@
         });
       });
     });
+
+
+    $(function() {
+      $("#nodelookupform").on("submit", function(e) {
+        e.preventDefault();
+        $.ajax({
+          url: 'http://localhost:' + node_lookup_port + '/findnode',
+          type: 'POST',
+          data: $(this).serialize(),
+          complete: function() {
+            //called when complete
+            console.log('process complete');
+          },
+          success: function(data) {
+            console.log(data);
+            var myJSON = JSON.stringify(data);
+            alert(myJSON);
+            console.log('process sucess');
+          },
+
+          error: function() {
+            console.log('process error');
+          },
+        });
+      });
+    });
+
   </script>
 
   <!-- start of table -->
