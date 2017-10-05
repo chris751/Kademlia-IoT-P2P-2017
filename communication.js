@@ -32,6 +32,7 @@ exports.findNodeRequest = function findNodeRequest(idWeWant, port) {
     },
     function(error, response, body) {
       if (!error && response.statusCode == 200) {
+        console.log('is this called');
         findNode.handleResponse(this.response.body);
       }
     }
