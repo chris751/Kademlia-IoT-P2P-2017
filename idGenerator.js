@@ -5,11 +5,11 @@ var k = 8;
 
 
 var newID = function (id){
-	console.log(id);
+	//console.log(id);
 	var toBeHashed = ''+id;
-	console.log(toBeHashed);
+	//console.log(toBeHashed);
 
-	
+
   	var shasum = crypto.createHash('sha1');
   	shasum.update(toBeHashed);
   	var hashedVal = shasum.digest('hex');
@@ -19,7 +19,7 @@ var newID = function (id){
   	var ID = hex2bin(hashedVal);
   	ID = ID.substr(0,k);
 	//var ID = parseInt('0x'+hashedVal,2);
-	console.log(ID);
+	//console.log(ID);
 
 
 	//var ID = leftPad(randomIntInc(0, 255).toString(2),8);
@@ -52,5 +52,3 @@ module.exports = {
 	newID,
 	leftPad
 };
-
-
