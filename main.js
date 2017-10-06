@@ -63,15 +63,7 @@ function handleResponse(response) {
   var currentBucket = myBucketArray[bucketNr];
   var update_response = kBucketManager.updateBucket(currentBucket, dataClone);
   myBucketArray[bucketNr] = update_response;
-  // for (i = 0; i < 8; i++) {
-  //   console.log(i);
-  //   console.log(myBucketArray[i]);
-  // }
 };
-
-hbs.registerHelper('ping', function(port) {
-  //console.log(port);
-});
 
 hbs.registerHelper('list', function(bucketNumber) {
   var out = '';
@@ -156,7 +148,6 @@ app.post('/findnode', function(req, result) {
     result.send(res);
   });
 })
-
 
 app.post('/api/node/ping', jsonParser, function(req, res) {
   if (!req.body) return res.sendStatus(400);
