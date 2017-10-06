@@ -21,8 +21,27 @@ exports.sendBootNodePing = function ping(ID, port, my_ip) {
     );
   }
 }
+
+exports.findNodeRandom = function(ID, port, my_ip, randomPortToCall) {
+  request.post(
+    `http://localhost:${randomPortToCall}/api/node/ping`, {
+      json: {
+        remoteId: ID,
+        remotePort: port,
+        remoteIp: my_ip
+      }
+    },
+    function(error, response, body) {
+      if (!error && response.statusCode == 200) {
+        main.handleResponse(this.response.body);
+      }
+    }
+  );
+}
+
+
 exports.findNodeRequest = function findNodeRequest(idWeWant, port) {
-  console.log('searching on' + port);
+  console.log('searching on ' + port);
   request.post(
     `http://localhost:${port}/findnode`, {
       json: {
@@ -31,7 +50,6 @@ exports.findNodeRequest = function findNodeRequest(idWeWant, port) {
     },
     function(error, response, body) {
       if (!error && response.statusCode == 200) {
-        console.log('is this called');
         findNode.handleResponse(this.response.body);
       }
     }
