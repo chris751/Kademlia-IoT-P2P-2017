@@ -154,6 +154,7 @@ app.post('/findnode', function(req, result) {
   };
 
   getResult((res) => {
+    console.log('sending it back');
     result.send(res);
   });
 })

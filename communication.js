@@ -22,8 +22,7 @@ exports.sendBootNodePing = function ping(ID, port, my_ip) {
   }
 }
 exports.findNodeRequest = function findNodeRequest(idWeWant, port) {
-  console.log(idWeWant);
-  console.log(port);
+  console.log('searching on' + port);
   request.post(
     `http://localhost:${port}/findnode`, {
       json: {
