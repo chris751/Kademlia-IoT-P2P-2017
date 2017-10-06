@@ -64,10 +64,10 @@ function handleResponse(response) {
   var currentBucket = myBucketArray[bucketNr];
   var update_response = kBucketManager.updateBucket(currentBucket, dataClone);
   myBucketArray[bucketNr] = update_response;
-  for (i = 0; i < 8; i++) {
-    console.log(i);
-    console.log(myBucketArray[i]);
-  }
+  // for (i = 0; i < 8; i++) {
+  //   console.log(i);
+  //   console.log(myBucketArray[i]);
+  // }
 };
 
 hbs.registerHelper('ping', function(port) {
@@ -102,11 +102,11 @@ app.get('/', function update(req, res) {
 
 //setup routes
 app.get('/api', function(req, res) {
-  res.send('api');
+  res.send("<h1>Documentation</h1>" + "<p>GET</p>" + "<h3>/api/node/info</h3>" + "<p>Shows info about node</p>" + "<h3>/api/node/bucket</h3>" + "<p>Shows buckets</p>" + "<br><p>POST</p>" + "<h3>/findnode</h3>" + "<p>Returns k closest nodes</p>");
 })
 
 app.get('/api/node', function(req, res) {
-  res.send('node')
+  res.send('node');
 })
 
 
@@ -140,7 +140,13 @@ var res = [];
 app.post('/findnode', function(req, result) {
 
   var getResult = (callback) => {
-    res = findNode.findNode(ID, req.body.remoteId, myBucketArray);
+
+    if(req.body.decision !== undefined){
+      res = findNode.nodeLookup(ID, req.body.remoteId, myBucketArray);
+      console.log('descision was present');
+    }else {
+      res = findNode.findNode(ID, req.body.remoteId, myBucketArray);
+    }
 
     setTimeout(() => {
       callback(res);
@@ -148,6 +154,7 @@ app.post('/findnode', function(req, result) {
   };
 
   getResult((res) => {
+    console.log('sending it back');
     result.send(res);
   });
 })

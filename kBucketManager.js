@@ -23,13 +23,13 @@ var kBucketManager = function(managerId, sortedId) {
 var updateBucket = function(bucket, newNodeObject) {
   var someArray = [];
   someArray.push(newNodeObject);
-  console.log('my bucket is');
-  console.log(bucket);
+  // console.log('my bucket is');
+  // console.log(bucket);
   if (bucket !== undefined) {
     for (i = 0; i < bucket.length; i++) {
       if (bucket[i].remoteId == newNodeObject.remoteId) {
         //placer den kendte node i bagerst i arrayet
-        console.log('inside loop');
+        // console.log('inside loop');
         bucket.splice(i, 1);
         bucket.push(newNodeObject);
         return bucket;

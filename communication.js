@@ -1,5 +1,6 @@
 const request = require('request');
 const main = require('./main');
+const findNode = require('./findNode.js');
 
 // sends post request to bootnode on startup
 exports.sendBootNodePing = function ping(ID, port, my_ip) {
@@ -19,4 +20,20 @@ exports.sendBootNodePing = function ping(ID, port, my_ip) {
       }
     );
   }
+}
+exports.findNodeRequest = function findNodeRequest(idWeWant, port) {
+  console.log('searching on' + port);
+  request.post(
+    `http://localhost:${port}/findnode`, {
+      json: {
+        remoteId: idWeWant
+      }
+    },
+    function(error, response, body) {
+      if (!error && response.statusCode == 200) {
+        console.log('is this called');
+        findNode.handleResponse(this.response.body);
+      }
+    }
+  );
 }
