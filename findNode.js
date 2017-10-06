@@ -39,6 +39,7 @@ var findNode = function(myId, idWeWant, myBucketArray) {
 }
 
 var idWeWant;
+var shortList = [];
 
 var nodeLookup = function(myId, idWeWant, myBucketArray) {
   this.idWeWant = idWeWant;

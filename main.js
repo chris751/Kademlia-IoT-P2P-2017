@@ -12,6 +12,7 @@ const nodeCreator = require('./nodeCreator');
 const kBucketManager = require('./kBucketManager');
 const communication = require('./communication');
 const findNode = require('./findNode');
+const utilities = require('./utilities');
 // variables
 const portArgument = process.argv.slice(2)[0]
 
@@ -55,8 +56,6 @@ if (portArgument === undefined) {
   console.log('Enter port number as argument');
   return;
 }
-
-communication.sendBootNodePing(ID, port, my_ip); //send ping when a node is created
 
 function handleResponse(response) {
   var dataClone = _.cloneDeep(response); //create deep clone
@@ -141,10 +140,10 @@ app.post('/findnode', function(req, result) {
 
   var getResult = (callback) => {
 
-    if(req.body.decision !== undefined){
+    if (req.body.decision !== undefined) {
       res = findNode.nodeLookup(ID, req.body.remoteId, myBucketArray);
       console.log('descision was present');
-    }else {
+    } else {
       res = findNode.findNode(ID, req.body.remoteId, myBucketArray);
     }
 
@@ -154,7 +153,6 @@ app.post('/findnode', function(req, result) {
   };
 
   getResult((res) => {
-    console.log('sending it back');
     result.send(res);
   });
 })
@@ -178,5 +176,13 @@ app.post('/api/node/ping', jsonParser, function(req, res) {
 app.listen(port, function() {
   console.log(`Server is up on port ${port}`)
 });
+
+communication.sendBootNodePing(ID, port, my_ip); //send ping when a node is created
+
+for (i = 0; i < 7; i++) {
+  var randomPort = utilities.getRandomInt(3500, 3528);
+  console.log(randomPort);
+  communication.findNodeRandom(ID, port, my_ip, randomPort);
+}
 
 module.exports.handleResponse = handleResponse;
