@@ -5,20 +5,24 @@ var k = 8;
 
 
 var newID = function (id){
-	console.log(id);
+	//console.log(id);
 	var toBeHashed = ''+id;
+	console.log("ID to be hashed");
 	console.log(toBeHashed);
 
 	
   	var shasum = crypto.createHash('sha1');
   	shasum.update(toBeHashed);
   	var hashedVal = shasum.digest('hex');
-  	//console.log('hashedVal');
-  	//console.log(hashedVal);
+  	console.log('hashedVal');
+  	console.log(hashedVal);
 
   	var ID = hex2bin(hashedVal);
+  	console.log('ID before being cut');
+  	console.log(ID);
   	ID = ID.substr(0,k);
 	//var ID = parseInt('0x'+hashedVal,2);
+	console.log('ID after being cut');
 	console.log(ID);
 
 
@@ -45,7 +49,9 @@ var leftPad = function (str, length) {
 
 
 function hex2bin(hex){
-    return ("00000000" + (parseInt(hex, 16)).toString(2)).substr(8);
+    return ((parseInt(hex, 16)).toString(2)).substr(8);
+    //Før ændring
+    //return ("00000000" + (parseInt(hex, 16)).toString(2)).substr(8);
 }
 
 module.exports = {
