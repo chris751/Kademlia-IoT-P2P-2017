@@ -63,15 +63,7 @@ function handleResponse(response) {
   var currentBucket = myBucketArray[bucketNr];
   var update_response = kBucketManager.updateBucket(currentBucket, dataClone);
   myBucketArray[bucketNr] = update_response;
-  // for (i = 0; i < 8; i++) {
-  //   console.log(i);
-  //   console.log(myBucketArray[i]);
-  // }
 };
-
-hbs.registerHelper('ping', function(port) {
-  //console.log(port);
-});
 
 hbs.registerHelper('list', function(bucketNumber) {
   var out = '';
@@ -146,7 +138,6 @@ app.post('/findnode', function(req, result) {
     } else {
       res = findNode.findNode(ID, req.body.remoteId, myBucketArray);
     }
-
     setTimeout(() => {
       callback(res);
     }, 50);
@@ -156,7 +147,6 @@ app.post('/findnode', function(req, result) {
     result.send(res);
   });
 })
-
 
 app.post('/api/node/ping', jsonParser, function(req, res) {
   if (!req.body) return res.sendStatus(400);
@@ -181,7 +171,6 @@ communication.sendBootNodePing(ID, port, my_ip); //send ping when a node is crea
 
 for (i = 0; i < 7; i++) {
   var randomPort = utilities.getRandomInt(3500, 3528);
-  console.log(randomPort);
   communication.findNodeRandom(ID, port, my_ip, randomPort);
 }
 
