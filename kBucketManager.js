@@ -50,7 +50,6 @@ var updateBucket = function(bucket, newNodeObject) {
   // 	//returner et updateret array
   // }else{
   // 	//Placer nye node bagerst i arrayet
-  //
   // 	//returner et updateret array
   // }
 }

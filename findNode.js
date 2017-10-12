@@ -33,47 +33,99 @@ var findNode = function(myId, idWeWant, myBucketArray) {
 }
 
 var idWeWant;
-var shortList = [];
 var responseList = [];
+var nodeToCall;
+var closestNode;
+var closestNodeXorValue;
+
+var notLookedAt = [];
+var lookedAt = [];
+
 
 var nodeLookup = function(myId, idWeWant, myBucketArray) {
   this.idWeWant = idWeWant;
   this.myId = myId;
 
-  shortList = findNode(myId, idWeWant, myBucketArray);
-  for (i = 0; i < shortList.length; i++) {
-    if (idWeWant == shortList[i].remoteId) {
+  notLookedAt = findNode(myId, idWeWant, myBucketArray);
+
+  for (i = 0; i < notLookedAt.length; i++) {
+    if (idWeWant == notLookedAt[i].remoteId) {
       console.log('i found it in my own bucket');
-      return shortList; //I found the id myself
+      return notLookedAt; //I found the id myself
     }
   }
+
+  var bucketTocall = kBucketManager.kBucketManager(myId, idWeWant);
+  nodeToCall = myBucketArray[bucketTocall][0];
+  closestNode = nodeToCall;
+  console.log('closestNode is: ');
+  console.log(closestNode);
+  var xorResult = (parseInt(nodeToCall.remoteId, 2) ^ parseInt(idWeWant, 2));
+  //console.log(xorResult);
+  closestNodeXorValue = xorResult;
+
   searchForId();
 }
 
+var counter = 0;
+
 var searchForId = function() {
-  for (i = 0; i < shortList.length; i++) {
-    communication.findNodeRequest(idWeWant, shortList[i].remotePort);
-  }
+    if(notLookedAt[counter] != undefined){
+      communication.findNodeRequest(idWeWant, notLookedAt[counter].remotePort);
+    }else {
+      console.log('we are done search and we did not find it ');
+      return;
+    }
 };
 
-var counter = 0;
-var handleResponse = function(response) {
 
-  console.log('response recieved');
-  console.log(response);
-  responseList.push(response); // response.PutIntoList
-  console.log('responselist without sorting');
-  console.log(responseList);
-  if (counter == k-1 ){ // the entire response has been recieved
-  responseList = _.uniqBy(responseList, 'remoteId'); //removes entries that are not unique
-  console.log('responseList after sorting');
-  console.log(responseList);
-
-  // response.removeDulicateIds
-  // response.removeThoseThatWeHaveAsked
-  // reponse.SortAfterXor
+var merge = function (response) {
+  for(i = 0; i < response.length; i++){
+    var isPresent = false;
+    for(j=0; j < lookedAt.length; j++){
+      if(lookedAt[j].remoteId == response[i].remoteId){
+          isPresent = true;
+      }
+    }
+    for(c=0; c < notLookedAt.length; c++){
+      if(notLookedAt[c].remoteId == response[i].remoteId){
+      isPresent = true;
+    }
   }
+    if(!isPresent){
+      notLookedAt.push(response[i]);
+    }
+  }
+  console.log('im done');
+  console.log(notLookedAt);
+}
+
+var result = [];
+
+var handleResponse = function(response) {
+  console.log('response recieved');
+  //console.log(response);
+  //console.log(typeof(response));
+  //notLookedAt.push(response);
+  result = response;
+  merge(result);
+  lookedAt.push(notLookedAt[counter]);
+  console.log('we have looked at :' + JSON.stringify(lookedAt));
   counter++;
+  searchForId();
+   // response.PutIntoList
+  // //console.log(notLookedAt);
+  //
+  // if (counter == k - 1) { // the entire response has been recieved
+  //   responseList = _.uniqBy(responseList, 'remoteId'); //removes entries that are not unique
+  //   console.log('responseList after sorting');
+  //   console.log(responseList);
+  //
+  //   // response.removeDulicateIds
+  //   // response.removeThoseThatWeHaveAsked
+  //   // reponse.SortAfterXor
+  // }
+
 };
 
 
