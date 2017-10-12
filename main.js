@@ -93,7 +93,7 @@ app.get('/', function update(req, res) {
 
 //setup routes
 app.get('/api', function(req, res) {
-  res.send("<h1>Documentation</h1>" + "<p>GET</p>" + "<h3>/api/node/info</h3>" + "<p>Shows info about node</p>" + "<h3>/api/node/bucket</h3>" + "<p>Shows buckets</p>" + "<br><p>POST</p>" + "<h3>/findnode</h3>" + "<p>Returns k closest nodes</p>");
+  res.send("api");
 })
 
 app.get('/api/node', function(req, res) {
