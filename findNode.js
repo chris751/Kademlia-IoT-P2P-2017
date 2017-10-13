@@ -1,6 +1,7 @@
 const kBucketManager = require('./kBucketManager');
 const communication = require('./communication');
 const _ = require('lodash');
+const main = require('./main');
 
 var k = 8;
 
@@ -33,19 +34,20 @@ var findNode = function(myId, idWeWant, myBucketArray) {
 }
 
 var idWeWant;
-var responseList = [];
 var nodeToCall;
-var closestNode;
-var closestNodeXorValue;
 
 var notLookedAt = [];
 var lookedAt = [];
+var counter = 0;
 
 
 var nodeLookup = function(myId, idWeWant, myBucketArray) {
+  notLookedAt = [];
+  lookedAt = [];
+  counter = 0;
+
   this.idWeWant = idWeWant;
   this.myId = myId;
-
   notLookedAt = findNode(myId, idWeWant, myBucketArray);
 
   for (i = 0; i < notLookedAt.length; i++) {
@@ -54,27 +56,20 @@ var nodeLookup = function(myId, idWeWant, myBucketArray) {
       return notLookedAt; //I found the id myself
     }
   }
-
-  var bucketTocall = kBucketManager.kBucketManager(myId, idWeWant);
-  nodeToCall = myBucketArray[bucketTocall][0];
-  closestNode = nodeToCall;
-  console.log('closestNode is: ');
-  console.log(closestNode);
-  var xorResult = (parseInt(nodeToCall.remoteId, 2) ^ parseInt(idWeWant, 2));
-  //console.log(xorResult);
-  closestNodeXorValue = xorResult;
-
   searchForId();
 }
 
-var counter = 0;
 
 var searchForId = function() {
     if(notLookedAt[counter] != undefined){
       communication.findNodeRequest(idWeWant, notLookedAt[counter].remotePort);
     }else {
       console.log('we are done search and we did not find it ');
-      return;
+      var arrayToSort = xorAndSort(lookedAt, idWeWant);
+      var xorSortedArray = _.sortBy(arrayToSort, ['xorRes']);
+      //console.log('this array should be sorted by xor:' + JSON.stringify(xorSortedArray));
+      var kClosetsNodes= xorSortedArray.slice(0, k);
+      main.returnValue(kClosetsNodes);
     }
 };
 
@@ -96,37 +91,33 @@ var merge = function (response) {
       notLookedAt.push(response[i]);
     }
   }
-  console.log('im done');
-  console.log(notLookedAt);
 }
 
 var result = [];
 
 var handleResponse = function(response) {
-  console.log('response recieved');
-  //console.log(response);
-  //console.log(typeof(response));
-  //notLookedAt.push(response);
   result = response;
   merge(result);
   lookedAt.push(notLookedAt[counter]);
-  console.log('we have looked at :' + JSON.stringify(lookedAt));
   counter++;
   searchForId();
-   // response.PutIntoList
-  // //console.log(notLookedAt);
-  //
-  // if (counter == k - 1) { // the entire response has been recieved
-  //   responseList = _.uniqBy(responseList, 'remoteId'); //removes entries that are not unique
-  //   console.log('responseList after sorting');
-  //   console.log(responseList);
-  //
-  //   // response.removeDulicateIds
-  //   // response.removeThoseThatWeHaveAsked
-  //   // reponse.SortAfterXor
-  // }
-
 };
+
+var xorAndSort = function(array, idWeWant) {
+var resArray = [];
+  for (i = 0; i < array.length; i++) {
+
+    var id = array[i].remoteId;
+    var xorResult = (parseInt(id, 2) ^ parseInt(idWeWant, 2));
+
+    var xorObj =  {
+      node: array[i],
+      xorRes: xorResult
+    };
+    resArray.push(xorObj);
+  }
+  return resArray;
+}
 
 
 

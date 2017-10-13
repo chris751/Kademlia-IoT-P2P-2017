@@ -13,6 +13,8 @@ const kBucketManager = require('./kBucketManager');
 const communication = require('./communication');
 const findNode = require('./findNode');
 const utilities = require('./utilities');
+const idGenerator = require('./idGenerator');
+
 // variables
 const portArgument = process.argv.slice(2)[0]
 
@@ -127,25 +129,72 @@ var response = {
 };
 
 var res = [];
+var nodeLookup;
+var res2;
+
+var returnValue = function (res){
+  console.log('called method');
+  res2 = res;
+}
+
+app.post('/store', function(req, result) {
+  var value = req.body.remoteId
+  var key = idGenerator.newID(value);
+
+  var keyValuePair = {
+    key,
+    value
+  };
+
+  console.log(JSON.stringify(keyValuePair));
+
+  var getStoreResult = (callback) => {
+    res = findNode.nodeLookup(ID, key, myBucketArray);
+
+    setTimeout(() => {
+      callback(res);
+    }, 3000);
+  };
+
+  getStoreResult((res) => {
+    console.log('Peers that we should store in' + JSON.stringify(res));
+  });
+})
+
+
 
 app.post('/findnode', function(req, result) {
 
   var getResult = (callback) => {
+    res = findNode.findNode(ID, req.body.remoteId, myBucketArray);
 
-    if (req.body.decision !== undefined) {
-      res = findNode.nodeLookup(ID, req.body.remoteId, myBucketArray);
-      console.log('descision was present');
-    } else {
-      res = findNode.findNode(ID, req.body.remoteId, myBucketArray);
-    }
     setTimeout(() => {
       callback(res);
     }, 50);
   };
 
-  getResult((res) => {
-    result.send(res);
-  });
+  var getLookUpResult = (callback) => {
+    res2 = findNode.nodeLookup(ID, req.body.remoteId, myBucketArray);
+
+    setTimeout(() => {
+      callback(res2);
+    }, 3000);
+  };
+
+
+  if (req.body.decision !== undefined) {
+    getLookUpResult((res2) =>{
+      console.log()
+      console.log('response to client' + JSON.stringify(res2));
+      result.send(res2);
+    });
+  } else {
+    getResult((res) => {
+      console.log()
+      console.log('response to client' + JSON.stringify(res));
+      result.send(res);
+    });
+  }
 })
 
 app.post('/api/node/ping', jsonParser, function(req, res) {
@@ -175,3 +224,9 @@ for (i = 0; i < 7; i++) {
 }
 
 module.exports.handleResponse = handleResponse;
+
+module.exports.returnValue = returnValue;
+
+// module.exports = {
+//   returnValue
+// };

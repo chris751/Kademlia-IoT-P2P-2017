@@ -10,8 +10,6 @@
 <body>
 
   <style>
-
-
     body {
       margin-left: 1%;
       margin-right: 3%;
@@ -111,14 +109,14 @@
 
 
     </div>
-  <h3>PING</h3>
+    <h3>PING</h3>
     <div class="form">
       <form id="registerform">
         <input type="text" name="sendToPort" placeholder="Enter port number to ping">
         <div id="ifYes" style="display:none">
-        <input type="text" name="remoteId" value="{{node_id}}">
-        <input type="text" name="remotePort" value="{{node_port_number}}">
-        <input type="text" name="remoteIp" value="{{my_ip_address}}">
+          <input type="text" name="remoteId" value="{{node_id}}">
+          <input type="text" name="remotePort" value="{{node_port_number}}">
+          <input type="text" name="remoteIp" value="{{my_ip_address}}">
         </div>
         <input type="submit" onclick="update()" value="PING">
       </form>
@@ -127,8 +125,8 @@
 
     <form id="findnodeform">
       <div id="ifYes" style="display:none">
-      <input type="text" name="find_port" value="{{node_port_number}}">
-        </div>
+        <input type="text" name="find_port" value="{{node_port_number}}">
+      </div>
       <input type="text" name="remoteId" placeholder="Enter ID to search for">
 
       <input type="submit" onclick="update()" value="Find_Node">
@@ -138,31 +136,49 @@
     <h3>Node_lookup</h3>
     <form id="nodelookupform">
       <input type="text" name="remoteId" placeholder="Enter ID to search for">
-<div id="ifYes" style="display:none">
-      <input type="text" name="node_lookup_port" value="{{node_port_number}}">
-      <input type="text" name="decision" value="something">
-</div>
+      <div id="ifYes" style="display:none">
+        <input type="text" name="node_lookup_port" value="{{node_port_number}}">
+        <input type="text" name="decision" value="something">
+      </div>
       <input type="submit" onclick="updateNodeLookupForm()" value="Look_up">
     </form>
-  </div>
-  <script>
 
-  document.getElementById('ifYes').style.display = 'none';
+    <h3>Store</h3>
+    <form id="storeForm">
+      <input type="text" name="remoteId" placeholder="Enter value to store ">
+      <div id="ifYes" style="display:none">
+        <input type="text" name="node_lookup_port" value="{{node_port_number}}">
+      </div>
+      <input type="submit" onclick="updateStoreForm()" value="store">
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('ifYes').style.display = 'none';
     var remotePort;
     var find_port;
     var find_id;
     var node_lookup_id;
     var node_lookup_port;
-
-    function updateNodeLookupForm(){
-      node_lookup_port = document.forms['nodelookupform'].elements['node_lookup_port'].value;
-    }
+    var storeValue;
 
     function update() {
       remotePort = document.forms['registerform'].elements['sendToPort'].value;
       find_port = document.forms['findnodeform'].elements['find_port'].value;
       find_id = document.forms['findnodeform'].elements['remoteId'].value;
     }
+
+
+    function updateNodeLookupForm() {
+      node_lookup_port = document.forms['nodelookupform'].elements['node_lookup_port'].value;
+    }
+
+    function updateStoreForm() {
+      storeValue = document.forms['storeForm'].elements['remoteId'].value;
+      node_lookup_port = document.forms['nodelookupform'].elements['node_lookup_port'].value;
+      console.log(storeValue);
+    }
+
 
     $(function() {
       $("#registerform").on("submit", function(e) {
@@ -240,6 +256,30 @@
       });
     });
 
+    $(function() {
+      $("#storeForm").on("submit", function(e) {
+        e.preventDefault();
+        $.ajax({
+          url: 'http://localhost:' + node_lookup_port + '/store',
+          type: 'POST',
+          data: $(this).serialize(),
+          complete: function() {
+            //called when complete
+            console.log('process complete');
+          },
+          success: function(data) {
+            console.log(data);
+            var myJSON = JSON.stringify(data);
+            alert(myJSON);
+            console.log('process sucess');
+          },
+
+          error: function() {
+            console.log('process error');
+          },
+        });
+      });
+    });
   </script>
 
   <!-- start of table -->
