@@ -11,12 +11,12 @@ var newID = function (id){
   	var shasum = crypto.createHash('sha1');
   	shasum.update(toBeHashed);
   	var hashedVal = shasum.digest('hex');
-  	console.log('hashedVal');
-  	console.log(hashedVal);
+  	// console.log('hashedVal');
+  	// console.log(hashedVal);
 
   	var ID = hex2bin(hashedVal);
-  	console.log('ID before being cut');
-  	console.log(ID);
+  	// console.log('ID before being cut');
+  	// console.log(ID);
   	ID = ID.substr(0,k);
 	//var ID = parseInt('0x'+hashedVal,2);
 
