@@ -165,7 +165,7 @@ app.post('/store', function(req, result) {
 
 app.post('/storeRequestFromNode', function(req, result) {
   // console.log('request recieved');
-  console.log('i am node' + port);
+  console.log('Storing keyValuePair on ' + port);
   var key = req.body.key;
   var value = req.body.value;
   // console.log(key);
@@ -180,12 +180,8 @@ app.post('/storeRequestFromNode', function(req, result) {
   console.log(storage);
 })
 
-
 app.post('/findValue', function(req, result) {
   var keyToFind = req.body.valueToFind;
-
-  console.log('hey bastardo');
-  console.log(keyToFind);
 
   var getFindValuePeers = (callback) => {
     res = findNode.nodeLookup(ID, keyToFind, myBucketArray);
@@ -198,33 +194,34 @@ app.post('/findValue', function(req, result) {
   getFindValuePeers((res) => {
     console.log('Peers that we should check for stored value ' + JSON.stringify(res));
     for (i = 0; i < res.length; i++) {
-      communication.requestSearchForValue(keyToFind, res[i].remotePort);
-      console.log('called' + res[i]);
+      communication.requestSearchForValue(keyToFind, res[i].remotePort); // send Store request to k closest peers
+      console.log('called' + JSON.stringify(res[i].remotePort));
     }
+
   });
 
-  getFindValuePeers((clientRes) => {
-    console.log('recieved callback');
-    result.send(clientRes);
-  });
+  setTimeout(() => {
+    console.log('sending tempvar back');
+    console.log(tempVar);
+    result.send(String(tempVar)); // Express requires response to be a String
+  }, 8000);
+  //TODO refactor this terrible implementation
 })
 
-var clientRes;
+var tempVar;
 
 var returnValueToClientMission = function(response) {
   console.log('we have the response');
   console.log(response);
-  clientRes = response;
-  var getFindValuePeers = (callback) => {
-    setTimeout(() => {
-      callback(clientRes);
-    }, 5000);
-  };
+  tempVar = response;
 }
 
 app.post('/searchForValue', function(req, result) {
-  //console.log(req.body.keyToFind);
+
+
   var keyToFind = req.body.keyToFind;
+  console.log('about to check if ' + keyToFind + ' has been stored');
+  console.log('my storage is ' + storage);
 
   if (storage != undefined) {
     for (i = 0; i < storage.length; i++) {
@@ -232,6 +229,8 @@ app.post('/searchForValue', function(req, result) {
         console.log('keys were the same ');
         console.log('returning the value ' + storage[i].value);
         result.send(storage[i].value);
+      }else {
+        console.log('node did not have the value that we are searching for');
       }
     }
   }
