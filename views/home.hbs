@@ -94,6 +94,15 @@
       border-bottom: 2px solid black;
       margin-bottom: 25px;
     }
+
+    .greenBackground { 
+
+    }
+
+    table.greenTable th {
+      background-color: #D32F2F;
+    }
+
   </style>
 
   <div class="float_left">
@@ -319,10 +328,25 @@
       });
     });
 
+    //TODO refactor this
+
   </script>
+
+
 
   <!-- start of table -->
   <div class="wrap-box">
+
+    <h2>Storage</h2>
+    <table class="greenTable">
+      <tr>
+        <th>Key</th>
+        <th>Value</th>
+      </tr>
+      {{#listStorage}}{{/listStorage}}
+    </table>
+
+
     <div class="floating-box">
       <h2>Bucket 0</h2>
       <table>

@@ -79,8 +79,22 @@ hbs.registerHelper('list', function(bucketNumber) {
             "<td>" + myBucketArray[i][j].remotePort + "</td>" +
             "<td>" + "<a href=" + '"' + myBucketArray[i][j].remoteIp + '"' + ">" + myBucketArray[i][j].remoteIp + "</a>" + "</td>" + "</tr>";
           // sorry, not sorry
+          //TODO move all hbs to seperate file
         }
       }
+    }
+  }
+  return out;
+});
+
+hbs.registerHelper('listStorage', function() {
+  var out = '';
+  for (var i = 0; i < 8; i++) { //should be K
+    if (storage[i] !== undefined) {
+          out = out + "<tr>" + "<td>" + storage[i].key + "</td>" +
+            "<td>" + storage[i].value + "</td>" + "</tr>"
+          // sorry, not sorry
+          //TODO move all hbs to seperate file
     }
   }
   return out;
