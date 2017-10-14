@@ -55,3 +55,36 @@ exports.findNodeRequest = function findNodeRequest(idWeWant, port) {
     }
   );
 }
+
+exports.requestStore = function(key, value, port) {
+  console.log('searching on ' + port);
+  request.post(
+    `http://localhost:${port}/storeRequestFromNode`, {
+      json: {
+        key: key,
+        value: value
+      }
+    },
+    function(error, response, body) {
+      if (!error && response.statusCode == 200) {
+        //findNode.handleResponse(this.response.body);
+      }
+    }
+  );
+}
+
+exports.requestSearchForValue = function(keyToFind, port) {
+  console.log('searching on ' + port);
+  request.post(
+    `http://localhost:${port}/searchForValue`, {
+      json: {
+        keyToFind: keyToFind
+      }
+    },
+    function(error, response, body) {
+      if (!error && response.statusCode == 200) {
+        main.returnValueToClientMission(this.response.body);
+      }
+    }
+  );
+}

@@ -24,6 +24,8 @@ const port = newNode.port;
 var my_ip = `http://127.0.0.1:${port}`;
 console.log('My ID is - ' + ID);
 
+var storage = [];
+
 var app = express();
 var myBucketArray = [
   newNode.bucket_0,
@@ -132,7 +134,7 @@ var res = [];
 var nodeLookup;
 var res2;
 
-var returnValue = function (res){
+var returnValue = function(res) {
   console.log('called method');
   res2 = res;
 }
@@ -141,24 +143,98 @@ app.post('/store', function(req, result) {
   var value = req.body.remoteId
   var key = idGenerator.newID(value);
 
-  var keyValuePair = {
-    key,
-    value
-  };
-
-  console.log(JSON.stringify(keyValuePair));
+  // console.log(JSON.stringify(keyValuePair));
 
   var getStoreResult = (callback) => {
     res = findNode.nodeLookup(ID, key, myBucketArray);
 
     setTimeout(() => {
       callback(res);
-    }, 3000);
+    }, 5000);
   };
 
   getStoreResult((res) => {
     console.log('Peers that we should store in' + JSON.stringify(res));
+    // store on list
+    for (i = 0; i < res.length; i++) {
+      communication.requestStore(key, value, res[i].remotePort);
+      // console.log('called' + res[i]);
+    }
   });
+})
+
+app.post('/storeRequestFromNode', function(req, result) {
+  // console.log('request recieved');
+  console.log('i am node' + port);
+  var key = req.body.key;
+  var value = req.body.value;
+  // console.log(key);
+  // console.log(value);
+
+  var keyValuePair = {
+    key: key,
+    value: value
+  };
+  //console.log(keyValuePair);
+  storage.push(keyValuePair);
+  console.log(storage);
+})
+
+
+app.post('/findValue', function(req, result) {
+  var keyToFind = req.body.valueToFind;
+
+  console.log('hey bastardo');
+  console.log(keyToFind);
+
+  var getFindValuePeers = (callback) => {
+    res = findNode.nodeLookup(ID, keyToFind, myBucketArray);
+
+    setTimeout(() => {
+      callback(res);
+    }, 5000);
+  };
+
+  getFindValuePeers((res) => {
+    console.log('Peers that we should check for stored value ' + JSON.stringify(res));
+    for (i = 0; i < res.length; i++) {
+      communication.requestSearchForValue(keyToFind, res[i].remotePort);
+      console.log('called' + res[i]);
+    }
+  });
+
+  getFindValuePeers((clientRes) => {
+    console.log('recieved callback');
+    result.send(clientRes);
+  });
+})
+
+var clientRes;
+
+var returnValueToClientMission = function(response) {
+  console.log('we have the response');
+  console.log(response);
+  clientRes = response;
+  var getFindValuePeers = (callback) => {
+    setTimeout(() => {
+      callback(clientRes);
+    }, 5000);
+  };
+}
+
+app.post('/searchForValue', function(req, result) {
+  //console.log(req.body.keyToFind);
+  var keyToFind = req.body.keyToFind;
+
+  if (storage != undefined) {
+    for (i = 0; i < storage.length; i++) {
+      if (keyToFind == storage[i].key) {
+        console.log('keys were the same ');
+        console.log('returning the value ' + storage[i].value);
+        result.send(storage[i].value);
+      }
+    }
+  }
 })
 
 
@@ -183,7 +259,7 @@ app.post('/findnode', function(req, result) {
 
 
   if (req.body.decision !== undefined) {
-    getLookUpResult((res2) =>{
+    getLookUpResult((res2) => {
       console.log()
       console.log('response to client' + JSON.stringify(res2));
       result.send(res2);
@@ -227,6 +303,7 @@ module.exports.handleResponse = handleResponse;
 
 module.exports.returnValue = returnValue;
 
+module.exports.returnValueToClientMission = returnValueToClientMission;
 // module.exports = {
 //   returnValue
 // };
