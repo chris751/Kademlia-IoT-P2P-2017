@@ -251,39 +251,54 @@ app.post('/searchForValue', function(req, result) {
 
 
 
+// app.post('/findnode', function(req, result) {
+//
+//   var getResult = (callback) => {
+//     res = findNode.findNode(ID, req.body.remoteId, myBucketArray);
+//
+//     setTimeout(() => {
+//       callback(res);
+//     }, 50);
+//   };
+//
+//   var getLookUpResult = (callback) => {
+//     res2 = findNode.nodeLookup(ID, req.body.remoteId, myBucketArray);
+//
+//     setTimeout(() => {
+//       callback(res2);
+//     }, 3000);
+//   };
+//
+//
+//   if (req.body.decision !== undefined) {
+//     getLookUpResult((res2) => {
+//       console.log('response to client' + JSON.stringify(res2));
+//       result.send(res2);
+//     });
+//   } else {
+//     getResult((res) => {
+//       console.log('response to client' + JSON.stringify(res));
+//       result.send(res);
+//     });
+//   }
+// })
+
 app.post('/findnode', function(req, result) {
 
-  var getResult = (callback) => {
-    res = findNode.findNode(ID, req.body.remoteId, myBucketArray);
-
-    setTimeout(() => {
-      callback(res);
-    }, 50);
-  };
-
-  var getLookUpResult = (callback) => {
-    res2 = findNode.nodeLookup(ID, req.body.remoteId, myBucketArray);
-
-    setTimeout(() => {
-      callback(res2);
-    }, 3000);
-  };
-
-
   if (req.body.decision !== undefined) {
-    getLookUpResult((res2) => {
-      console.log()
-      console.log('response to client' + JSON.stringify(res2));
-      result.send(res2);
+    findNode.nodeLookup(ID, req.body.remoteId, myBucketArray, function(lookupResult){
+        console.log('lookupResult: ' + JSON.stringify(lookupResult));
+        result.send(lookupResult);
     });
-  } else {
-    getResult((res) => {
-      console.log()
-      console.log('response to client' + JSON.stringify(res));
-      result.send(res);
+  }
+  else {
+    findNode.findNode(ID, req.body.remoteId, myBucketArray, function(findNodeResult){
+      console.log('find node result: ' + JSON.stringify(findNodeResult));
+      result.send(findNodeResult);
     });
   }
 })
+
 
 app.post('/api/node/ping', jsonParser, function(req, res) {
   if (!req.body) return res.sendStatus(400);
