@@ -133,33 +133,49 @@ app.get('/api/node/bucket', function(req, res) {
   });
 })
 
-var res = [];
+//var res = [];
+
+// app.post('/store', function(req, result) {
+//   var value = req.body.remoteId
+//   var key = idGenerator.newID(value);
+//
+//   // console.log(JSON.stringify(keyValuePair));
+//
+//   var getStoreResult = (callback) => {
+//     res = findNode.nodeLookup(ID, key, myBucketArray);
+//
+//     setTimeout(() => {
+//       callback(res);
+//     }, 5000);
+//   };
+//
+//   getStoreResult((res) => {
+//     console.log('Peers that we should store in' + JSON.stringify(res));
+//     // store on list
+//     for (i = 0; i < res.length; i++) {
+//       communication.requestStore(key, value, res[i].remotePort);
+//       // console.log('called' + res[i]);
+//     }
+//   });
+// })
 
 app.post('/store', function(req, result) {
   var value = req.body.remoteId
   var key = idGenerator.newID(value);
-
   // console.log(JSON.stringify(keyValuePair));
 
-  var getStoreResult = (callback) => {
-    res = findNode.nodeLookup(ID, key, myBucketArray);
-
-    setTimeout(() => {
-      callback(res);
-    }, 5000);
-  };
-
-  getStoreResult((res) => {
+  findNode.nodeLookup(ID, key, myBucketArray, function(res) {
     console.log('Peers that we should store in' + JSON.stringify(res));
-    // store on list
+
     for (i = 0; i < res.length; i++) {
-      communication.requestStore(key, value, res[i].remotePort);
-      // console.log('called' + res[i]);
+      communication.requestStore(key, value, res[i].node.remotePort);
+      console.log('called ' + JSON.stringify(res[i].node.remotePort));
     }
   });
 })
 
 app.post('/storeRequestFromNode', function(req, result) {
+  //console.log(req.body);
   var keyValuePair = {
     key: req.body.key,
     value: req.body.value
@@ -168,51 +184,57 @@ app.post('/storeRequestFromNode', function(req, result) {
   storage.push(keyValuePair);
 })
 
+// app.post('/findValue', function(req, result) {
+//   var keyToFind = req.body.valueToFind;
+//
+//   var getFindValuePeers = (callback) => {
+//     res = findNode.nodeLookup(ID, keyToFind, myBucketArray);
+//
+//     setTimeout(() => {
+//       callback(res);
+//     }, 6000);
+//   };
+//
+//   getFindValuePeers((res) => {
+//     console.log('Peers that we should check for stored value ' + JSON.stringify(res));
+//     for (i = 0; i < res.length; i++) {
+//       communication.requestSearchForValue(keyToFind, res[i].remotePort); // send Store request to k closest peers
+//       console.log('called' + JSON.stringify(res[i].remotePort));
+//     }
+//   });
+//
+//   setTimeout(() => {
+//     console.log('sending tempvar back');
+//     console.log(tempVar);
+//     result.send(String(tempVar)); // Express requires response to be a String
+//   }, 10000);
+//   //TODO refactor this terrible implementation
+// })
+
 app.post('/findValue', function(req, result) {
   var keyToFind = req.body.valueToFind;
 
-  var getFindValuePeers = (callback) => {
-    res = findNode.nodeLookup(ID, keyToFind, myBucketArray);
-
-    setTimeout(() => {
-      callback(res);
-    }, 6000);
-  };
-
-  getFindValuePeers((res) => {
-    console.log('Peers that we should check for stored value ' + JSON.stringify(res));
-    for (i = 0; i < res.length; i++) {
-      communication.requestSearchForValue(keyToFind, res[i].remotePort); // send Store request to k closest peers
-      console.log('called' + JSON.stringify(res[i].remotePort));
+  findNode.nodeLookup(ID, keyToFind, myBucketArray, function(list) {
+    console.log('Peers that we should check for stored value ' + JSON.stringify(list));
+    var calledFirstTime = true;
+    for (i = 0; i < list.length; i++) {
+      communication.requestSearchForValue(keyToFind, list[i].node.remotePort, function(value) { // search for value on k closest peers
+        if (value != undefined && calledFirstTime){ // only send result back once
+          result.send(String(value)); // return value to client
+          calledFirstTime = false;
+        }
+      });
+      console.log('called' + JSON.stringify(list[i].node.remotePort));
     }
   });
-
-  setTimeout(() => {
-    console.log('sending tempvar back');
-    console.log(tempVar);
-    result.send(String(tempVar)); // Express requires response to be a String
-  }, 10000);
-  //TODO refactor this terrible implementation
 })
-
-var tempVar;
-
-var returnValueToClientMission = function(response) {
-  console.log('we have the response');
-  console.log(response);
-  tempVar = response;
-}
 
 app.post('/searchForValue', function(req, result) {
   var keyToFind = req.body.keyToFind;
-  console.log('about to check if ' + keyToFind + ' has been stored on ' + port);
-  console.log('my storage is ' + JSON.stringify(storage));
-
   if (storage != undefined) {
     for (i = 0; i < storage.length; i++) {
       if (keyToFind == storage[i].key) {
-        console.log('keys were the same ');
-        console.log('returning the value ' + storage[i].value);
+        console.log('keys were the same');
         result.send(storage[i].value);
       } else {
         console.log('Node did not have the value that we are searching for');
@@ -258,12 +280,12 @@ app.post('/findnode', function(req, result) {
 
   if (req.body.decision !== undefined) { // nodeLookup button was pushed
     findNode.nodeLookup(ID, req.body.remoteId, myBucketArray, function(lookupResult) {
-      console.log('lookupResult: ' + JSON.stringify(lookupResult));
+      //console.log('lookupResult: ' + JSON.stringify(lookupResult));
       result.send(lookupResult);
     });
   } else { // findNode button was pushed or called from nodeLookup
     findNode.findNode(ID, req.body.remoteId, myBucketArray, function(findNodeResult) {
-      console.log('find node result: ' + JSON.stringify(findNodeResult));
+      //console.log('find node result: ' + JSON.stringify(findNodeResult));
       result.send(findNodeResult);
     });
   }
@@ -297,10 +319,9 @@ app.listen(port, function() {
 
 communication.sendBootNodePing(ID, port, my_ip); //send ping when a node is created
 
-  for (i = 0; i < 7; i++) {
-    var randomPort = utilities.getRandomInt(3500, 3528);
-    communication.findNodeRandom(ID, port, my_ip, randomPort); // ping random peer to create a p2p network
-  }
+for (i = 0; i < 7; i++) {
+  var randomPort = utilities.getRandomInt(3500, 3528);
+  communication.findNodeRandom(ID, port, my_ip, randomPort); // ping random peer to create a p2p network
+}
 
 module.exports.handleResponse = handleResponse;
-module.exports.returnValueToClientMission = returnValueToClientMission;

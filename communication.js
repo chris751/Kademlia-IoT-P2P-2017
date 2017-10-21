@@ -57,6 +57,7 @@ exports.findNodeRequest = function findNodeRequest(idWeWant, port) {
 }
 
 exports.requestStore = function(key, value, port) {
+  console.log('sending request to node' + port);
   request.post(
     `http://localhost:${port}/storeRequestFromNode`, {
       json: {
@@ -66,13 +67,13 @@ exports.requestStore = function(key, value, port) {
     },
     function(error, response, body) {
       if (!error && response.statusCode == 200) {
-        //findNode.handleResponse(this.response.body);
+
       }
     }
   );
 }
 
-exports.requestSearchForValue = function(keyToFind, port) {
+exports.requestSearchForValue = function(keyToFind, port, callback) {
   console.log('searching on ' + port);
   request.post(
     `http://localhost:${port}/searchForValue`, {
@@ -82,8 +83,8 @@ exports.requestSearchForValue = function(keyToFind, port) {
     },
     function(error, response, body) {
       if (!error && response.statusCode == 200) {
-        main.returnValueToClientMission(this.response.body);
+          callback(this.response.body);
+        }
       }
-    }
-  );
-}
+    );
+  }
