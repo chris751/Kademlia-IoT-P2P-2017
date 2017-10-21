@@ -57,7 +57,6 @@ exports.findNodeRequest = function findNodeRequest(idWeWant, port) {
 }
 
 exports.requestStore = function(key, value, port) {
-  console.log('searching on ' + port);
   request.post(
     `http://localhost:${port}/storeRequestFromNode`, {
       json: {
