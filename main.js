@@ -149,7 +149,6 @@ var nodeLookup;
 var res2;
 
 var returnValue = function(res) {
-  console.log('called method');
   res2 = res;
 }
 
@@ -182,6 +181,7 @@ app.post('/storeRequestFromNode', function(req, result) {
   console.log('Storing keyValuePair on ' + port);
   var key = req.body.key;
   var value = req.body.value;
+
   // console.log(key);
   // console.log(value);
 
@@ -202,7 +202,7 @@ app.post('/findValue', function(req, result) {
 
     setTimeout(() => {
       callback(res);
-    }, 5000);
+    }, 6000);
   };
 
   getFindValuePeers((res) => {
@@ -211,14 +211,13 @@ app.post('/findValue', function(req, result) {
       communication.requestSearchForValue(keyToFind, res[i].remotePort); // send Store request to k closest peers
       console.log('called' + JSON.stringify(res[i].remotePort));
     }
-
   });
 
   setTimeout(() => {
     console.log('sending tempvar back');
     console.log(tempVar);
     result.send(String(tempVar)); // Express requires response to be a String
-  }, 8000);
+  }, 10000);
   //TODO refactor this terrible implementation
 })
 
@@ -234,8 +233,8 @@ app.post('/searchForValue', function(req, result) {
 
 
   var keyToFind = req.body.keyToFind;
-  console.log('about to check if ' + keyToFind + ' has been stored');
-  console.log('my storage is ' + storage);
+  console.log('about to check if ' + keyToFind + ' has been stored on ' + port);
+  console.log('my storage is ' + JSON.stringify(storage));
 
   if (storage != undefined) {
     for (i = 0; i < storage.length; i++) {

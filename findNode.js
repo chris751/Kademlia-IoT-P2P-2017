@@ -64,7 +64,7 @@ var searchForId = function() {
     if(notLookedAt[counter] != undefined){
       communication.findNodeRequest(idWeWant, notLookedAt[counter].remotePort);
     }else {
-      console.log('we are done search and we did not find it ');
+      console.log('Finished searching on peers');
       var arrayToSort = xorAndSort(lookedAt, idWeWant);
       var xorSortedArray = _.sortBy(arrayToSort, ['xorRes']);
       //console.log('this array should be sorted by xor:' + JSON.stringify(xorSortedArray));
