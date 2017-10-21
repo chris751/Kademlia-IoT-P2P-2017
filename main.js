@@ -6,7 +6,6 @@ const yargs = require('yargs');
 const http = require("http");
 const _ = require('lodash');
 
-
 // custom modules
 const nodeCreator = require('./nodeCreator');
 const kBucketManager = require('./kBucketManager');
@@ -133,32 +132,6 @@ app.get('/api/node/bucket', function(req, res) {
   });
 })
 
-//var res = [];
-
-// app.post('/store', function(req, result) {
-//   var value = req.body.remoteId
-//   var key = idGenerator.newID(value);
-//
-//   // console.log(JSON.stringify(keyValuePair));
-//
-//   var getStoreResult = (callback) => {
-//     res = findNode.nodeLookup(ID, key, myBucketArray);
-//
-//     setTimeout(() => {
-//       callback(res);
-//     }, 5000);
-//   };
-//
-//   getStoreResult((res) => {
-//     console.log('Peers that we should store in' + JSON.stringify(res));
-//     // store on list
-//     for (i = 0; i < res.length; i++) {
-//       communication.requestStore(key, value, res[i].remotePort);
-//       // console.log('called' + res[i]);
-//     }
-//   });
-// })
-
 app.post('/store', function(req, result) {
   var value = req.body.remoteId
   var key = idGenerator.newID(value);
@@ -183,33 +156,6 @@ app.post('/storeRequestFromNode', function(req, result) {
   console.log('Values stored on ' + port);
   storage.push(keyValuePair);
 })
-
-// app.post('/findValue', function(req, result) {
-//   var keyToFind = req.body.valueToFind;
-//
-//   var getFindValuePeers = (callback) => {
-//     res = findNode.nodeLookup(ID, keyToFind, myBucketArray);
-//
-//     setTimeout(() => {
-//       callback(res);
-//     }, 6000);
-//   };
-//
-//   getFindValuePeers((res) => {
-//     console.log('Peers that we should check for stored value ' + JSON.stringify(res));
-//     for (i = 0; i < res.length; i++) {
-//       communication.requestSearchForValue(keyToFind, res[i].remotePort); // send Store request to k closest peers
-//       console.log('called' + JSON.stringify(res[i].remotePort));
-//     }
-//   });
-//
-//   setTimeout(() => {
-//     console.log('sending tempvar back');
-//     console.log(tempVar);
-//     result.send(String(tempVar)); // Express requires response to be a String
-//   }, 10000);
-//   //TODO refactor this terrible implementation
-// })
 
 app.post('/findValue', function(req, result) {
   var keyToFind = req.body.valueToFind;
@@ -242,39 +188,6 @@ app.post('/searchForValue', function(req, result) {
     }
   }
 })
-
-
-// app.post('/findnode', function(req, result) {
-//
-//   var getResult = (callback) => {
-//     res = findNode.findNode(ID, req.body.remoteId, myBucketArray);
-//
-//     setTimeout(() => {
-//       callback(res);
-//     }, 50);
-//   };
-//
-//   var getLookUpResult = (callback) => {
-//     res2 = findNode.nodeLookup(ID, req.body.remoteId, myBucketArray);
-//
-//     setTimeout(() => {
-//       callback(res2);
-//     }, 3000);
-//   };
-//
-//
-//   if (req.body.decision !== undefined) {
-//     getLookUpResult((res2) => {
-//       console.log('response to client' + JSON.stringify(res2));
-//       result.send(res2);
-//     });
-//   } else {
-//     getResult((res) => {
-//       console.log('response to client' + JSON.stringify(res));
-//       result.send(res);
-//     });
-//   }
-// })
 
 app.post('/findnode', function(req, result) {
 
