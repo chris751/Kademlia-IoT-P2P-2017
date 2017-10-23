@@ -6,7 +6,6 @@ const yargs = require('yargs');
 const http = require("http");
 const _ = require('lodash');
 
-
 // custom modules
 const nodeCreator = require('./nodeCreator');
 const kBucketManager = require('./kBucketManager');
@@ -23,6 +22,8 @@ const ID = newNode.ID;
 const port = newNode.port;
 var my_ip = `http://127.0.0.1:${port}`;
 console.log('My ID is - ' + ID);
+
+var storage = [];
 
 var app = express();
 var myBucketArray = [
@@ -77,8 +78,22 @@ hbs.registerHelper('list', function(bucketNumber) {
             "<td>" + myBucketArray[i][j].remotePort + "</td>" +
             "<td>" + "<a href=" + '"' + myBucketArray[i][j].remoteIp + '"' + ">" + myBucketArray[i][j].remoteIp + "</a>" + "</td>" + "</tr>";
           // sorry, not sorry
+          //TODO move all hbs to seperate file
         }
       }
+    }
+  }
+  return out;
+});
+
+hbs.registerHelper('listStorage', function() {
+  var out = '';
+  for (var i = 0; i < 8; i++) { //should be K
+    if (storage[i] !== undefined) {
+      out = out + "<tr>" + "<td>" + storage[i].key + "</td>" +
+        "<td>" + storage[i].value + "</td>" + "</tr>"
+      // sorry, not sorry
+      //TODO move all hbs to seperate file
     }
   }
   return out;
@@ -117,92 +132,91 @@ app.get('/api/node/bucket', function(req, res) {
   });
 })
 
-
-var jsonParser = bodyParser.json()
-var remoteId;
-var remotePort;
-var remoteIp;
-var response = {
-  remoteId,
-  remotePort,
-  remoteIp
-};
-
-var res = [];
-var nodeLookup;
-var res2;
-
-var returnValue = function (res){
-  console.log('called method');
-  res2 = res;
-}
-
 app.post('/store', function(req, result) {
   var value = req.body.remoteId
   var key = idGenerator.newID(value);
+  // console.log(JSON.stringify(keyValuePair));
 
-  var keyValuePair = {
-    key,
-    value
-  };
-
-  console.log(JSON.stringify(keyValuePair));
-
-  var getStoreResult = (callback) => {
-    res = findNode.nodeLookup(ID, key, myBucketArray);
-
-    setTimeout(() => {
-      callback(res);
-    }, 3000);
-  };
-
-  getStoreResult((res) => {
+  findNode.nodeLookup(ID, key, myBucketArray, function(res) {
     console.log('Peers that we should store in' + JSON.stringify(res));
+
+    for (i = 0; i < res.length; i++) {
+      communication.requestStore(key, value, res[i].node.remotePort);
+      console.log('called ' + JSON.stringify(res[i].node.remotePort));
+    }
   });
 })
 
+app.post('/storeRequestFromNode', function(req, result) {
+  //console.log(req.body);
+  var keyValuePair = {
+    key: req.body.key,
+    value: req.body.value
+  };
+  console.log('Values stored on ' + port);
+  storage.push(keyValuePair);
+})
 
+app.post('/findValue', function(req, result) {
+  var keyToFind = req.body.valueToFind;
+
+  findNode.nodeLookup(ID, keyToFind, myBucketArray, function(list) {
+    console.log('Peers that we should check for stored value ' + JSON.stringify(list));
+    var calledFirstTime = true;
+    for (i = 0; i < list.length; i++) {
+      communication.requestSearchForValue(keyToFind, list[i].node.remotePort, function(value) { // search for value on k closest peers
+        if (value != undefined && calledFirstTime){ // only send result back once
+          result.send(String(value)); // return value to client
+          calledFirstTime = false;
+        }
+      });
+      console.log('called' + JSON.stringify(list[i].node.remotePort));
+    }
+  });
+})
+
+app.post('/searchForValue', function(req, result) {
+  var keyToFind = req.body.keyToFind;
+  if (storage != undefined) {
+    for (i = 0; i < storage.length; i++) {
+      if (keyToFind == storage[i].key) {
+        console.log('keys were the same');
+        result.send(storage[i].value);
+      } else {
+        console.log('Node did not have the value that we are searching for');
+      }
+    }
+  }
+})
 
 app.post('/findnode', function(req, result) {
 
-  var getResult = (callback) => {
-    res = findNode.findNode(ID, req.body.remoteId, myBucketArray);
-
-    setTimeout(() => {
-      callback(res);
-    }, 50);
-  };
-
-  var getLookUpResult = (callback) => {
-    res2 = findNode.nodeLookup(ID, req.body.remoteId, myBucketArray);
-
-    setTimeout(() => {
-      callback(res2);
-    }, 3000);
-  };
-
-
-  if (req.body.decision !== undefined) {
-    getLookUpResult((res2) =>{
-      console.log()
-      console.log('response to client' + JSON.stringify(res2));
-      result.send(res2);
+  if (req.body.decision !== undefined) { // nodeLookup button was pushed
+    findNode.nodeLookup(ID, req.body.remoteId, myBucketArray, function(lookupResult) {
+      //console.log('lookupResult: ' + JSON.stringify(lookupResult));
+      result.send(lookupResult);
     });
-  } else {
-    getResult((res) => {
-      console.log()
-      console.log('response to client' + JSON.stringify(res));
-      result.send(res);
+  } else { // findNode button was pushed or called from nodeLookup
+    findNode.findNode(ID, req.body.remoteId, myBucketArray, function(findNodeResult) {
+      //console.log('find node result: ' + JSON.stringify(findNodeResult));
+      result.send(findNodeResult);
     });
   }
 })
 
+
+var jsonParser = bodyParser.json()
+
 app.post('/api/node/ping', jsonParser, function(req, res) {
   if (!req.body) return res.sendStatus(400);
-  response.remoteId = req.body.remoteId;
-  response.remotePort = req.body.remotePort;
-  response.remoteIp = req.body.remoteIp;
+  var response = {
+    remoteId: req.body.remoteId,
+    remotePort: req.body.remotePort,
+    remoteIp: req.body.remoteIp
+  };
+
   handleResponse(response);
+
   res.send({
     'event': 'PONG',
     'remoteId': ID,
@@ -220,13 +234,7 @@ communication.sendBootNodePing(ID, port, my_ip); //send ping when a node is crea
 
 for (i = 0; i < 7; i++) {
   var randomPort = utilities.getRandomInt(3500, 3528);
-  communication.findNodeRandom(ID, port, my_ip, randomPort);
+  communication.findNodeRandom(ID, port, my_ip, randomPort); // ping random peer to create a p2p network
 }
 
 module.exports.handleResponse = handleResponse;
-
-module.exports.returnValue = returnValue;
-
-// module.exports = {
-//   returnValue
-// };

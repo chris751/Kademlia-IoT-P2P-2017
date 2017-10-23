@@ -5,7 +5,7 @@ const main = require('./main');
 
 var k = 8;
 
-var findNode = function(myId, idWeWant, myBucketArray) {
+var findNode = function(myId, idWeWant, myBucketArray, callback) {
   var resArray = [];
   var bucket_nr = kBucketManager.kBucketManager(myId, idWeWant);
 
@@ -30,7 +30,8 @@ var findNode = function(myId, idWeWant, myBucketArray) {
       }
     }
   }
-  return resArray;
+  //return resArray;
+  return callback(resArray);
 }
 
 var idWeWant;
@@ -39,37 +40,44 @@ var nodeToCall;
 var notLookedAt = [];
 var lookedAt = [];
 var counter = 0;
+var nodeCallback;
 
-
-var nodeLookup = function(myId, idWeWant, myBucketArray) {
+var nodeLookup = function(myId, idWeWant, myBucketArray, callback) {
   notLookedAt = [];
   lookedAt = [];
   counter = 0;
 
   this.idWeWant = idWeWant;
   this.myId = myId;
-  notLookedAt = findNode(myId, idWeWant, myBucketArray);
+  nodeCallback = callback;
+
+  findNode(myId, idWeWant, myBucketArray, function(res){
+      notLookedAt = res; // when find node is done
+  });
 
   for (i = 0; i < notLookedAt.length; i++) {
     if (idWeWant == notLookedAt[i].remoteId) {
-      console.log('i found it in my own bucket');
+      //console.log('i found it in my own bucket');
       return notLookedAt; //I found the id myself
     }
   }
-  searchForId();
+  searchForId(function(res){
+  });
 }
 
 
-var searchForId = function() {
+var searchForId = function(callback) {
     if(notLookedAt[counter] != undefined){
       communication.findNodeRequest(idWeWant, notLookedAt[counter].remotePort);
+      callback(null); //not done yet
     }else {
-      console.log('we are done search and we did not find it ');
+      console.log('Finished searching on peers');
       var arrayToSort = xorAndSort(lookedAt, idWeWant);
       var xorSortedArray = _.sortBy(arrayToSort, ['xorRes']);
       //console.log('this array should be sorted by xor:' + JSON.stringify(xorSortedArray));
       var kClosetsNodes= xorSortedArray.slice(0, k);
-      main.returnValue(kClosetsNodes);
+      return callback(kClosetsNodes);
+      //main.returnValue(kClosetsNodes);
     }
 };
 
@@ -100,8 +108,17 @@ var handleResponse = function(response) {
   merge(result);
   lookedAt.push(notLookedAt[counter]);
   counter++;
-  searchForId();
-};
+
+  searchForId(function(res){
+    if (res !== null){
+      console.log('we are done');
+      nodeCallback(res); // return result if we are done
+      //nodeLookup(null, null, null, function (res)){
+
+      }
+    })
+  }
+
 
 var xorAndSort = function(array, idWeWant) {
 var resArray = [];

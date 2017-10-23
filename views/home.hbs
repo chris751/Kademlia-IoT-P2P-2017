@@ -94,6 +94,15 @@
       border-bottom: 2px solid black;
       margin-bottom: 25px;
     }
+
+    .greenBackground { 
+
+    }
+
+    table.greenTable th {
+      background-color: #D32F2F;
+    }
+
   </style>
 
   <div class="float_left">
@@ -121,8 +130,8 @@
         <input type="submit" onclick="update()" value="PING">
       </form>
     </div>
-    <h3>Find_node</h3>
 
+    <h3>Find_node</h3>
     <form id="findnodeform">
       <div id="ifYes" style="display:none">
         <input type="text" name="find_port" value="{{node_port_number}}">
@@ -131,7 +140,6 @@
 
       <input type="submit" onclick="update()" value="Find_Node">
     </form>
-
 
     <h3>Node_lookup</h3>
     <form id="nodelookupform">
@@ -151,6 +159,16 @@
       </div>
       <input type="submit" onclick="updateStoreForm()" value="store">
     </form>
+
+    <h3>Find_value</h3>
+    <form id="findValueForm">
+      <input type="text" name="valueToFind" placeholder="Enter value to find">
+      <div id="ifYes" style="display:none">
+        <input type="text" name="node_lookup_port" value="{{node_port_number}}">
+      </div>
+      <input type="submit" onclick="updateFindValue()" value="Find">
+    </form>
+
   </div>
 
   <script>
@@ -161,13 +179,13 @@
     var node_lookup_id;
     var node_lookup_port;
     var storeValue;
+    var valueToFind;
 
     function update() {
       remotePort = document.forms['registerform'].elements['sendToPort'].value;
       find_port = document.forms['findnodeform'].elements['find_port'].value;
       find_id = document.forms['findnodeform'].elements['remoteId'].value;
     }
-
 
     function updateNodeLookupForm() {
       node_lookup_port = document.forms['nodelookupform'].elements['node_lookup_port'].value;
@@ -176,7 +194,11 @@
     function updateStoreForm() {
       storeValue = document.forms['storeForm'].elements['remoteId'].value;
       node_lookup_port = document.forms['nodelookupform'].elements['node_lookup_port'].value;
-      console.log(storeValue);
+    }
+
+    function updateFindValue() {
+      valueToFind = document.forms['findValueForm'].elements['valueToFind'].value;
+      node_lookup_port = document.forms['nodelookupform'].elements['node_lookup_port'].value;
     }
 
 
@@ -280,10 +302,51 @@
         });
       });
     });
+
+    $(function() {
+      $("#findValueForm").on("submit", function(e) {
+        e.preventDefault();
+        $.ajax({
+          url: 'http://localhost:' + node_lookup_port + '/findValue',
+          type: 'POST',
+          data: $(this).serialize(),
+          complete: function() {
+            //called when complete
+            console.log('process complete');
+          },
+          success: function(data) {
+            console.log(data);
+            var myJSON = JSON.stringify(data);
+            alert(myJSON);
+            console.log('process sucess');
+          },
+
+          error: function() {
+            console.log('process error');
+          },
+        });
+      });
+    });
+
+    //TODO refactor this
+
   </script>
+
+
 
   <!-- start of table -->
   <div class="wrap-box">
+
+    <h2>Storage</h2>
+    <table class="greenTable">
+      <tr>
+        <th>Key</th>
+        <th>Value</th>
+      </tr>
+      {{#listStorage}}{{/listStorage}}
+    </table>
+
+
     <div class="floating-box">
       <h2>Bucket 0</h2>
       <table>
